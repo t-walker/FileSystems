@@ -22,12 +22,30 @@ int inode_start;
 init() 
 {
   // Initialize data structures of LEVEL-1
+  int i, j;
+  MINODE *mip;
+  PROC *p;
 
-  // 1) 2 PROCs, P0 with uid=0, P1 with uid=1, all PROC.cwd = 0
-
-  // 2) MINODE minode[100]; all with refCount = 0
+  printf("init()\n");
   
-  // 3) MINODE *root = 0; 
+  // 1) 2 PROCs, P0 with uid=0, P1 with uid=1, all PROC.cwd = 0
+  for (i = 0; i < NPROC; i++) {
+    p = &minode[i];
+    p->uid = i;
+    p->pid = i+1;
+    p->cwd = 0;
+    p->status = FREE;
+  }
+  // 2) MINODE minode[100]; all with refCount = 0
+  for (i = 0; i < NMINODE; i++) {
+    mip = &minode[i];
+    mip->dev = mip->ino = 0;
+    mip->refCount = 0;
+    mip->mounted = 0;
+    mip->mountptr = 0;
+  }
+  // 3) MINODE *root = 0;
+  root = 0;
 }
 
 // Write C code for: 
