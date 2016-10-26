@@ -19,6 +19,38 @@ int bmap;
 int imap;
 int inode_start; 
 
+int search(MINODE *mip, char *name)
+{
+  int i;
+  char *cp, *tmp;
+
+  char buf[1024];
+
+  for(i = 0; i < 12; i++)
+  {
+    if(mip->INODE.i_block[i])
+    {
+      get_block(dev, mip->INODE.i_block[i], buf);
+    
+
+      dp = (DIR *)buf; 
+      cp = buf;
+
+      while(cp < buf + BLKSIZE)
+      {
+        if (strcmp(dp->name, path) == 0)
+        {
+          return dp->inode;
+        }
+
+        cp += dp->rec_len;
+        dp = (DIR *)cp;
+      }
+  }
+
+  return 0;
+}
+
 init() 
 {
   // Initialize data structures of LEVEL-1
