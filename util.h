@@ -16,7 +16,7 @@ int parse(const char* str,const char* delim, char *strs[100])
     token = strtok (NULL, delim);
   }
   strs[i] = NULL;
-  return i;
+  return i - 1;
 }
 
 int get_block(int fd, int blk, char buf[])
