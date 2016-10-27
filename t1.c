@@ -19,6 +19,8 @@ int bmap;
 int imap;
 int inode_start; 
 
+char path[200];
+
 int search(MINODE *mip, char *pathname)
 {
   int i;
@@ -140,6 +142,8 @@ void cd(char *pathname)
   int iNodeNumber; 
   
   MINODE *mip = running->cwd->dev;
+  
+  parse(pathname, '/', paths);
   
   dev = running->cwd->dev; 
   
