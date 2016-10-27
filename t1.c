@@ -139,7 +139,7 @@ int getino(char *path, MINODE *mp)
 		}
 		
 		offset = (inum - 1) % 8; //for char
-		get_block(dev, ((inum - 1)/8) + inode_start, but);
+		get_block(dev, ((inum - 1)/8) + inode_start, buf);
 		mp = (MINODE*)buf + offset;
 		
 		iput(mp);
@@ -151,7 +151,7 @@ void mount_root() // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
-  printf ("mounting root\n");
+  printf ("mount_root()\n");
   dev = open(deviceName, O_RDWR);
   if (dev < 0) {
      printf("open failed\n");
@@ -170,23 +170,31 @@ void mount_root() // Mount root file system, establish / and CWDs
 	printf("NOT an EXT2 FS\n");
 	exit(1);
    }
+   
    nblocks = sp->s_blocks_count;
    ninodes = sp->s_inodes_count;
-   
+   printf("setting nblocks & ninodes\n");
+
    get_block(dev, 2, buf);
+   printf("get_block()\n");
    gp = (GD* )buf;
+   printf("(GD *)buf\n");
+   
    inode_start = gp->bg_inode_table;
-   //set up root
+   
+  //set up root
   root = iget(dev, 2); 
-  
-  root->mptr = (struct mntable*)malloc(sizeof(struct mntable));
+  printf("root = iget(dev,2)\n");
+  //root->mptr = (struct mntable*)malloc(sizeof(struct mntable));
   root->mptr->ninodes = ninodes;
   root->mptr->nblocks = nblocks;
   root->mptr->dev = dev;
   root->mptr->busy = 1;
   root->mptr->mounted_inode = root;
+  printf("setting root values\n");
   strcpy(root->mptr->name,"/");
   strcpy(root->mptr->mount_name, deviceName);
+  printf("string copying\n");
   // Let CWD of both P0 and P1 point at the root minode (refCount = 3)
   proc[0].cwd = iget(dev, 2);
   proc[1].cwd = iget(dev, 2);

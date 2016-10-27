@@ -24,7 +24,7 @@ int get_block(int fd, int blk, char buf[])
   read(fd, buf, BLKSIZE);
 }
 
-int put_block(int dev, int blk, char buf[])
+int put_block(int fd, int blk, char buf[])
 {
   lseek(fd, (long)blk*BLKSIZE, 0);
   write(fd, buf, BLKSIZE);
