@@ -178,8 +178,11 @@ void mount_root() // Mount root file system, establish / and CWDs
    inode_start = gp->bg_inode_table;
    //set up root
   root = iget(dev, 2); 
-  
-  root->mptr = (struct mntable*)malloc(sizeof(struct mntable));
+  if(root == 0) {
+  	printf("mount failed\n");
+  	return;
+  }
+  root->mptr = (MNTABLE*)malloc(sizeof(MNTABLE));
   root->mptr->ninodes = ninodes;
   root->mptr->nblocks = nblocks;
   root->mptr->dev = dev;
