@@ -1,6 +1,6 @@
 #include <string.h>
 #include "types.h"
-
+int debug = 0;
 /*parse str on delim and return them in strs*/
 int parse(const char* str,const char* delim, char *strs[100])
 {
