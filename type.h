@@ -40,7 +40,7 @@ typedef struct oft{
   int  offset;
 }OFT;
 
-typedef struct Mount{
+typedef struct mntable {
         int    ninodes;
         int    nblocks;
         int    dev, busy;   

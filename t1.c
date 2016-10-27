@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "type.h"
+#include "util.h"
 
 MINODE minode[NMINODE];
 MINODE *root;
@@ -122,7 +123,7 @@ void mount_root() // Mount root file system, establish / and CWDs
    //set up root
   root = iget(dev, 2); 
   
-  root->mptr = (struct mntable*)malloc(sizeof(mntable));
+  root->mptr = (struct mntable*)malloc(sizeof(struct mntable));
   root->mptr->ninodes = ninodes;
   root->mptr->nblocks = nblocks;
   root->mptr->dev = dev;
