@@ -162,7 +162,7 @@ void ls (char *pathname)
   }
   else
   {
-    printDir(running->cwd->dev);
+    printDir(running->cwd->INODE);
   }
 }
 
