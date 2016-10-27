@@ -158,11 +158,11 @@ void ls (char *pathname)
     // Each datablock of mip->INODE contains DIR entries
     // print the neame of strings of the DIR entries 
     
-    printDir(mip->INODE);
+    printDir(mip->INODE, dev);
   }
   else
   {
-    printDir(running->cwd->INODE);
+    printDir(running->cwd->INODE, dev);
   }
 }
 
