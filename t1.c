@@ -114,6 +114,38 @@ void init()
 // Write C code for: 
 // int ino = getino(int *dev, char *pathname);
 // MINODE *mip = iget(dev, ino);
+int getino(char *path, MINODE *mp)
+{
+	int i, n, inum = 0, bnum, offset;
+	MINODE *temp = (MINODE*) malloc(sizeof(MINODE));
+	char *strs[100];
+	if(path[0] == '/') {
+		dev = root->dev;
+		inum = root->ino;
+	}
+	else {
+		dev = running->cwd->dev;
+		inum = root->ino;
+	}
+	
+	n = parse(path, "/", strs);
+	
+	for (i = 0; i < n; i++) {
+		inum = search(mp, strs[i]);
+		
+		if(inum == 0) {
+			printf("File not found\n");
+			return 0;
+		}
+		
+		offset = (inum - 1) % 8; //for char
+		get_block(dev, ((inum - 1)/8) + inode_start, but);
+		mp = (MINODE*)buf + offset;
+		
+		iput(mp);
+	}
+	return inum;
+}
 
 void mount_root() // Mount root file system, establish / and CWDs
 {
