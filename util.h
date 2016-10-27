@@ -22,23 +22,6 @@ int get_block(int fd, int blk, char buf[])
 	read(fd, buf, BLKSIZE);
 }
 
-SUPER* getSuper(int fd)
-{
-	char buf[1024];
-	//read SUPER block
-	get_block(fd, 1, buf);
-	sp = (SUPER *)buf;
-	
-	//check for EXT2 magic number:
-
-	printf("s_magic = %x\n", sp->s_magic);
-	if (sp->s_magic != 0xEF53) {
-		printf("NOT an EXT2 FS\n");
-		exit(1);
-	}
-	return sp;
-}
-
 int getino(char* name[256], int n)
 {
 	int blk, iblock, rootblock, ino, offset, nextBlock;
