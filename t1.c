@@ -68,6 +68,10 @@ init()
     p->cwd = 0;
     p->status = FREE;
   }
+  
+  running = malloc(sizeof(PROC));
+  running = &proc[0];
+  
   // 2) MINODE minode[100]; all with refCount = 0
   for (i = 0; i < NMINODE; i++) {
     mip = &minode[i];
@@ -76,6 +80,8 @@ init()
     mip->mounted = 0;
     mip->mountptr = 0;
   }
+  
+  
   // 3) MINODE *root = 0;
   root = 0;
 }
