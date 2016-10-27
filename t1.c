@@ -38,7 +38,7 @@ int search(MINODE *mip, char *pathname)
 
       while(cp < buf + BLKSIZE)
       {
-        if (strcmp(dp->name, pathname) == 0)
+        if (strcmp(dp->name, pathname) == 0))
         {
           return dp->inode;
         }
