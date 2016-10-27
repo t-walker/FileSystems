@@ -47,7 +47,7 @@ typedef struct mntable {
         struct Minode *mounted_inode;
         char   name[256]; 
         char   mount_name[64];
-} MOUNT;
+} MNTABLE;
 
 typedef struct proc{
   struct proc *next;
