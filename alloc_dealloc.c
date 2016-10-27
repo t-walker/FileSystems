@@ -1,3 +1,5 @@
+#include "type.h"
+
 int tst_bit(char *buf, int bit)
 {
   int i, j;
