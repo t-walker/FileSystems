@@ -110,7 +110,7 @@ void mount_root() // Mount root file system, establish / and CWDs
 }
 
 // ls [pathname] command:
-void ls (char *pathname, char *command)
+void ls (char *pathname)
 {
   int ino, dev = running->cwd->dev;
   MINODE *mip = running->cwd;
@@ -139,11 +139,11 @@ void ls (char *pathname, char *command)
 
 void cd(char *pathname)
 {
-  int iNodeNumber; 
+  int iNodeNum; 
   
   MINODE *mip = running->cwd->dev;
   
-  parse(pathname, '/', paths);
+  parse(pathname, '/', path);
   
   dev = running->cwd->dev; 
   
@@ -175,8 +175,9 @@ int main(int argc, char *argv[], char *env[])
   // ask for a command string (cd pathname)
   cd(pathname);  
 
+  
   // ask for a command string (stat pathname)
-  stat(pathname, &mystat); // struct stat mystat; print mystat information
+  //stat(pathname, &mystat); // struct stat mystat; print mystat information
   return 0;
 }
 
