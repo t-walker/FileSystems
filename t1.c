@@ -182,5 +182,11 @@ int main(int argc, char *argv[], char *env[])
 
 int quit()
 {
-  // iput all DIRTY minodes before shutdown
+  int i = 0;
+
+  for (i = 0; i < NMINODE; i++)
+  {
+    minode[i].refCount = 0;
+    iput(&minode[i]);
+  }
 }
