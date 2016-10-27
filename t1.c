@@ -22,6 +22,30 @@ int inode_start;
 
 char path[200], buf[1024], *deviceName = "disk";
 
+MINODE *iget(int dev, int ino)
+{
+
+}
+
+void iput(MINODE *mip)
+{
+  int blk_num, offset;
+  mip->refCount -= 1; 
+
+  if (mip->refCount == 0)
+  {
+    blk_num = ((mip->ino - 1)/8) + inode_start;
+    offset = (mip->ino-1) % 8;
+
+    get_block(mip->dev, blk_num, buf);
+
+    ip = (INODE *)buf + offset;
+    memcpy(ip, &(mip->INODE), sizeof(INODE));
+
+    put_block(dev, blk_num, buf);
+  }
+}
+
 int search(MINODE *mip, char *pathname)
 {
   int i;
