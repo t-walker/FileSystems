@@ -24,6 +24,7 @@ char path[200], buf[1024], *deviceName = "disk";
 
 MINODE *iget(int dev, int ino)
 {
+    printf("iget()\n");
     MINODE *mip = malloc(sizeof(MINODE));
     int i,
         blk_num,
@@ -36,6 +37,7 @@ MINODE *iget(int dev, int ino)
                 return &minode[i];
             }
     }
+    printf("looping through minodes\n");
 
     //Use mailman's to get the block location
     blk_num = ((ino - 1)/8) + inode_start;
@@ -61,6 +63,7 @@ MINODE *iget(int dev, int ino)
             minode[i].refCount = 1;
 
             //Return the index of the inode
+            printf("reached return\n");
             return &minode[i];
         }
     }
