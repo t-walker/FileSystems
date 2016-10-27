@@ -51,7 +51,7 @@ int search(MINODE *mip, char *pathname)
   return 0;
 }
 
-init() 
+void init() 
 {
   // Initialize data structures of LEVEL-1
   int i, j;
