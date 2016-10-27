@@ -40,6 +40,15 @@ typedef struct oft{
   int  offset;
 }OFT;
 
+typedef struct Mount{
+        int    ninodes;
+        int    nblocks;
+        int    dev, busy;   
+        struct Minode *mounted_inode;
+        char   name[256]; 
+        char   mount_name[64];
+} MOUNT;
+
 typedef struct proc{
   struct proc *next;
   int          pid;
