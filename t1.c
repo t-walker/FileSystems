@@ -19,7 +19,7 @@ int bmap;
 int imap;
 int inode_start; 
 
-char path[200];
+char path[200], buf[1024], *deviceName = "disk";
 
 int search(MINODE *mip, char *pathname)
 {
@@ -94,19 +94,47 @@ mount_root() // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
-  dev = open("myDisk", O_RDWR);
+  printf ("mounting root\n");
+  dev = open(deviceName, O_RDWR);
   if (dev < 0) {
      printf("open failed\n");
      exit(1);
   }
 	
-  getSuper(dev);
-	
-  root = iget(dev, 2); 
+  
+  //read SUPER block
+  get_block(dev, 1, buf);
+  sp = (SUPER *)buf;
+  
+  //check for EXT2 magic number:
 
+  printf("s_magic = %x\n", sp->s_magic);
+  if (sp->s_magic != 0xEF53) {
+	printf("NOT an EXT2 FS\n");
+	exit(1);
+   }
+   nblocks = sp->s_blocks_count;
+   ninodes = sp->s_inodes_count;
+   
+   get_block(dev, 2, buf);
+   gp = (GD* )buf;
+   inode_start = gp->bg_inode_table;
+   //set up root
+  root = iget(dev, 2); 
+  
+  root->mptr = (struct mntable*)malloc(sizeof(mntable));
+  root->mptr->ninodes = ninodes;
+  root->mptr->nblocks = nblocks;
+  root->mptr->dev = dev;
+  root->mptr->busy = 1;
+  root->mptr->mounted_inode = root;
+  strcpy(root->mptr->name,"/");
+  strcpy(root->mptr->mount_name, deviceName);
   // Let CWD of both P0 and P1 point at the root minode (refCount = 3)
   proc[0].cwd = iget(dev, 2);
   proc[1].cwd = iget(dev, 2);
+  
+  printf("mount root finished\n\n");
 }
 
 // ls [pathname] command:
