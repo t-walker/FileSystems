@@ -19,7 +19,7 @@ int bmap;
 int imap;
 int inode_start; 
 
-int search(MINODE *mip, char *name)
+int search(MINODE *mip, char *pathname)
 {
   int i;
   char *cp, *tmp;
@@ -38,7 +38,7 @@ int search(MINODE *mip, char *name)
 
       while(cp < buf + BLKSIZE)
       {
-        if (strcmp(dp->name, path) == 0)
+        if (strcmp(dp->name, pathname) == 0)
         {
           return dp->inode;
         }
