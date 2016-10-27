@@ -88,13 +88,13 @@ mount_root() // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
-	dev = open("myDisk", O_RDWR);
-	if (dev < 0) {
-		printf("open failed\n");
-		exit(1);
-	}
+  dev = open("myDisk", O_RDWR);
+  if (dev < 0) {
+     printf("open failed\n");
+     exit(1);
+  }
 	
-	super();
+  getSuper(dev);
 	
   root = iget(dev, 2); 
 
