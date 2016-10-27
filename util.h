@@ -23,6 +23,12 @@ int get_block(int fd, int blk, char buf[])
 	lseek(fd, (long)blk*BLKSIZE, 0);
 	read(fd, buf, BLKSIZE);
 }
+
+int put_block(int dev, int blk, char buf[]){
+    lseek(fd, (long)blk*BLKSIZE, 0);
+    write(fd, buf, BLKSIZE);
+}
+
 //TODO: make this a more detailed printout
 void printDir(INODE ptr, int dev)
 {
