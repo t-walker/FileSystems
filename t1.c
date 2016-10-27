@@ -48,8 +48,8 @@ int search(MINODE *mip, char *pathname)
         cp += dp->rec_len;
         dp = (DIR *)cp;
       }
+    }
   }
-
   return 0;
 }
 
@@ -166,9 +166,11 @@ void cd(char *pathname)
 
 int main(int argc, char *argv[], char *env[])
 {
+  char *pathname = "/";
+
   init();
   mount_root();
-
+  
   // ask for a command string (ls pathame)
   ls(pathname);
 
@@ -190,4 +192,6 @@ int quit()
     minode[i].refCount = 0;
     iput(&minode[i]);
   }
+
+  return 0;
 }

@@ -81,7 +81,7 @@ u32 ialloc(int dev)
  // get inode Bitmap into buf
  get_block(dev, imap, buf);
  
- for (i=0; i ninodes){
+ for (i=0; i < ninodes; i++){
     printf("inumber %d out of range\n", ino);
     return;
   }
