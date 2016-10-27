@@ -29,7 +29,7 @@ int getino(char* name[256], int n)
 	int i, isFile = 1;
 
 	//read SUPER block
-	get_block(fd, 1, buf);
+	get_block(dev, 1, buf);
 	sp = (SUPER *)buf;
 	
 //	printf("s_magic = %x\n", sp->s_magic);
@@ -42,18 +42,18 @@ int getino(char* name[256], int n)
 //	printf("nblocks = %d\n", nblocks);
 	
 	//read Group Descriptor - 0
-	get_block(fd, 2, buf);
+	get_block(dev, 2, buf);
 	gp = (GD*)buf;
 	
 	//get the InodesBeginBlock
 	iblock = gp->bg_inode_table; //get inode start block#
 	
-	get_block(fd, iblock, buf);
+	get_block(dev, iblock, buf);
 	ip = (INODE *)buf + 1; //ip points at 2nd INODE
 
 		//read InodeBeginBlock to get inode of /, witch is INODE #2
 	rootblock = ip->i_block[0];
-	get_block(fd, rootblock, dbuf);
+	get_block(dev, rootblock, dbuf);
 	dp = (DIR*)dbuf;
 	cp = dbuf;
 	printf("%d\n", ip);
@@ -69,7 +69,7 @@ int getino(char* name[256], int n)
 		//	use ino to read in INODE and let ip point to INODE
 	  blk = (ino - 1)/8 + iblock;
 	  offset = (ino - 1)% 8;
-	  get_block(fd, blk, buf);
+	  get_block(dev, blk, buf);
 	  printf("blk: %d, off: %d\n", blk, offset);
 	  ip = (INODE*) buf + offset;
 		
@@ -79,7 +79,7 @@ int getino(char* name[256], int n)
 	       	//next dir
 	      printf("Entering Directory: %s\n", name[i]);
 	      nextBlock = ip->i_block[0];
-	      get_block(fd, nextBlock, dbuf);
+	      get_block(dev, nextBlock, dbuf);
 	      dp = (DIR*)dbuf;
 	      cp = dbuf;
 	    }
