@@ -22,6 +22,21 @@ int inode_start;
 
 char path[200], buf[1024], *deviceName = "disk";
 
+void printDir(INODE ptr)
+{
+	char buf[1024];
+	char *cp;
+	get_block(dev, ptr.i_block[0],buf);
+	dp = (DIR *)buf;
+	cp = buf;
+	
+	while(cp < buf + 1024) {
+		printf ("%s\n", dp->name);
+		cp += dp->rec_len;
+		dp = (DIR *) cp; //shut up
+	}
+}
+
 int search(MINODE *mip, char *pathname)
 {
   int i;
