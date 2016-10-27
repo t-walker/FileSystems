@@ -26,7 +26,7 @@ int get_block(int fd, int blk, char buf[])
 //TODO: make this a more detailed printout
 void printDir(INODE ptr)
 {
-	char cp*;
+	char *cp;
 	get_block(dev, ptr.i_block[0],but);
 	dp = (DIR *)buf;
 	cp = buf;
