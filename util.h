@@ -22,6 +22,20 @@ int get_block(int fd, int blk, char buf[])
 	lseek(fd, (long)blk*BLKSIZE, 0);
 	read(fd, buf, BLKSIZE);
 }
+//TODO: make this a more detailed printout
+void printDir(INODE ptr)
+{
+	char cp*;
+	get_block(dev, ptr.i_block[0],but);
+	dp = (DIR *)buf;
+	cp = buf;
+	
+	while(cp < buf + 1024) {
+		printf ("%s\n", dp->name);
+		cp += dp->rec_len;
+		dp = (DIR *) cp; //shut up
+	}
+}
 
 int getino(char* name[256], int n)
 {
