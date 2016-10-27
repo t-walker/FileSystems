@@ -24,7 +24,7 @@ int get_block(int fd, int blk, char buf[])
 	read(fd, buf, BLKSIZE);
 }
 //TODO: make this a more detailed printout
-void printDir(INODE ptr)
+void printDir(INODE ptr, int dev)
 {
 	char buf[1024];
 	char *cp;
