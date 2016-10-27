@@ -132,8 +132,26 @@ ls (char *pathname, char *command)
 
 cd(char *pathname)
 {
-  // if no pathame, cd to root.
-  // else cd to the pathname
+  int iNodeNumber; 
+  
+  MINODE *mip = running->cwd->dev;
+  
+  dev = running->cwd->dev; 
+  
+  if (path[0] == '\n') // Check to make sure the input isn't a newline.
+  {
+    if (path[0] == '/') // If the character starts at root, it's not relative. 
+    {
+      dev = root->dev; // Start it at the root.
+    }
+    
+    iNodeNum = getino(mip, pathname);
+    running->cwd = mip;
+  }
+  else
+  {
+    running->cwd = root;
+  }
 }
 
 
