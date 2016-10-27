@@ -77,8 +77,6 @@ init()
     mip = &minode[i];
     mip->dev = mip->ino = 0;
     mip->refCount = 0;
-    mip->mounted = 0;
-    mip->mountptr = 0;
   }
   
   
