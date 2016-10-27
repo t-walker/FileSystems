@@ -1,6 +1,6 @@
 #include <string.h>
 #include "types.h"
-
+int debug = 0;
 /*parse str on delim and return them in strs*/
 int parse(const char* str,const char* delim, char *strs[100])
 {
@@ -22,8 +22,9 @@ int get_block(int fd, int blk, char buf[])
 	read(fd, buf, BLKSIZE);
 }
 
-SUPER* getSuper()
+SUPER* getSuper(int fd)
 {
+	char buf[1024];
 	//read SUPER block
 	get_block(fd, 1, buf);
 	sp = (SUPER *)buf;

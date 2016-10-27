@@ -94,12 +94,19 @@ mount_root() // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
-
+  dev = open("myDisk", O_RDWR);
+  if (dev < 0) {
+     printf("open failed\n");
+     exit(1);
+  }
+	
+  getSuper(dev);
+	
   root = iget(dev, 2); 
 
   // Let CWD of both P0 and P1 point at the root minode (refCount = 3)
-  P0.cwd = iget(dev, 2);
-  P1.cwd = iget(dev, 2);
+  proc[0].cwd = iget(dev, 2);
+  proc[1].cwd = iget(dev, 2);
 }
 
 // ls [pathname] command:
