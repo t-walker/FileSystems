@@ -108,7 +108,7 @@ void mount_root() // Mount root file system, establish / and CWDs
 }
 
 // ls [pathname] command:
-ls (char *pathname, char *command)
+void ls (char *pathname, char *command)
 {
   int ino, dev = running->cwd->dev;
   MINODE *mip = running->cwd;
@@ -135,7 +135,7 @@ ls (char *pathname, char *command)
   }
 }
 
-cd(char *pathname)
+void cd(char *pathname)
 {
   int iNodeNumber; 
   
