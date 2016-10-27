@@ -111,11 +111,16 @@ ls (char *pathname, char *command)
 
     ino = getino(&dev, pathname);
     MINODE *mip = iget(dev, ino);
-
+    
     // mip points at the minode;
     // Each datablock of mip->INODE contains DIR entries
     // print the neame of strings of the DIR entries 
-    }
+    
+    print_dir_entries(mip->INODE);
+  }
+  else
+  {
+    print_dir_entries(running->cwd->dev);
   }
 }
 
