@@ -88,7 +88,7 @@ void init()
 // int ino = getino(int *dev, char *pathname);
 // MINODE *mip = iget(dev, ino);
 
-mount_root() // Mount root file system, establish / and CWDs
+void mount_root() // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
