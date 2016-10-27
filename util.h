@@ -42,6 +42,7 @@ int getino(char* name[256], int n)
 {
 	int blk, iblock, rootblock, ino, offset, nextBlock;
 	int i, isFile = 1;
+	char *cp;
 
 	//read SUPER block
 	get_block(dev, 1, buf);
