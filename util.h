@@ -26,9 +26,10 @@ int parse(const char* str,const char* delim, char *strs[100])
   }
 
   strs[i] = NULL;
+
   printf("parse() -- assigning strs[i] to null.\n");
-  printf("parse() -- returning i.\n");
-  return i;
+  printf("parse() -- returning i-1.\n");
+  return i - 1;
 }
 
 int get_block(int fd, int blk, char buf[])
