@@ -1,5 +1,6 @@
 #include "../filesystem.h"
 
+// List the files in a directory
 void ls (char *pathname)
 {
   printf("ls() -----\n");

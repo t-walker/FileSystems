@@ -1,5 +1,6 @@
 #include "../filesystem.h"
 
+// Change the directory
 void cd(char *pathname)
 {
   int iNodeNum;
