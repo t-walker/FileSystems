@@ -13,6 +13,7 @@ gcc -w -m32 t1.c core.c \
   operations/mount_root.c \
   operations/cd.c \
   operations/ls.c \
+  operations/getCommands.c \
   -o filesystem
 if [ -f "filesystem" ]
 then 

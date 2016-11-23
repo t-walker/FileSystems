@@ -2,8 +2,24 @@
 
 int debug = 0;
 
-// Parse str on delim and return them in strs
+//strip the newline characters
+char* strip(char* str, int num)
+{
+  printf("strip()-----\n");
+  char ret[1000];
+  int i = 0, j = 0;
+  while(str[i] != '\0')
+    {
+      if(j < 1000 && str[i] != '\n')
+	ret[j++] = str[i];
+      i++;
+    }
+  ret[j] = '\0';
+  printf("strip()---finished\n");
+return ret;
+}
 
+// Parse str on delim and return them in strs
 int parse(const char* str,const char* delim, char *strs[100])
 {
   printf("parse() -------\n");
