@@ -28,6 +28,7 @@ void iput(MINODE *mip);
 int search(MINODE *mip, char *pathname);
 
 /* FILESYTEM OPERATIONS */
+void getCommands(char* currentPath);
 /* LEVEL 1 */
 void mount_root();
 // void mkdir(char *pathname);
