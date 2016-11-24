@@ -2,11 +2,11 @@
 
 // MOUNT_ROOT
 // Mounts the root of the device given the device name.
-void mount_root(char*deviceName) // Mount root file system, establish / and CWDs
+void mount_root(char* deviceName) // Mount root file system, establish / and CWDs
 {
   // Open device for RW (get a file descriptor dev for the opened device)
   // read SUPER block to verify it's an EXT2 FS
-  printf("mount_root() ------name:%s\n",deviceName);
+  printf("mount_root() ------name:%s\n", deviceName);
 
   dev = open(deviceName, O_RDWR);
   printf("mount_root() -- opened device.\n");
