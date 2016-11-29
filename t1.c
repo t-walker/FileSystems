@@ -76,7 +76,7 @@ int main(int argc, char *argv[], char *env[])
   printf("main() -- calling mount_root()\n");
   mount_root(deviceName);
 
-  getCommands("PLACE CWD HERE");
+  getCommands(pathname);//need to pass the current working directory
   // // ask for a command string (ls pathame)
   ls(pathname);
   // // ask for a command string (cd pathname)
