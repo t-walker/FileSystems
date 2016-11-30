@@ -50,10 +50,10 @@ void init()
 
         // 2) MINODE minode[100]; all with refCount = 0
         for (i = 0; i < NMINODE; i++) {
-          minode[i].refCount = 0;
-          minode[i].dirty = 0;
-          minode[i].mounted = 0;
-          minode[i].mptr = 0;
+                minode[i].refCount = 0;
+                minode[i].dirty = 0;
+                minode[i].mounted = 0;
+                minode[i].mptr = 0;
         }
 
         printf("iget() -- created empty MINODES\n");
