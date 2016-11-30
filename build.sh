@@ -15,9 +15,10 @@ gcc -w -m32 t1.c core.c alloc_dealloc.c \
   operations/ls.c \
   operations/getCommands.c \
   operations/mkdir_creat.c \
+  operations/pwd.c \
   -o filesystem
 if [ -f "filesystem" ]
-then 
+then
   echo "${PURPLE}Filesystem compiled successfully.${NC}"
 else
   echo "${RED}Filesystem failed to compile.${NC}"

@@ -12,7 +12,9 @@ void getCommands(char* currentPath)
         while(1)
         {
                 i=0;
-                printf("TMFilesystem:%s$", currentPath);
+                printf("TMFilesystem:");
+                pwd();
+                printf("$ ");
                 fgets(command, 250, stdin);
                 parse(strip(command), " ", strs);
 
@@ -25,11 +27,11 @@ void getCommands(char* currentPath)
 
                 if(strcmp(strs[0], "ls")==0)
                 {
-                  ls(strs[1]);
+                        ls(strs[1]);
                 }
                 else if(strcmp(strs[0], "cd")==0)
                 {
-                  cd(strs[1]);
+                        cd(strs[1]);
                 }
 		else if(strcmp(strs[0], "mkdir")==0)
 		{
