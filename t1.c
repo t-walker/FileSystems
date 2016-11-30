@@ -4,9 +4,10 @@
 #include <ext2fs/ext2_fs.h>
 #include <string.h>
 #include <libgen.h>
-#include <sys/stat.h>
+//#include <sys/stat.h>
 
-#include "type.h"
+//#include "type.h"
+#include "filesystem.h"
 #include "util.h"
 
 MINODE minode[NMINODE];
@@ -67,6 +68,7 @@ void init()
 int main(int argc, char *argv[], char *env[])
 {
         char *pathname = "/";
+	deviceName = "disk"; //TODO:should get from user
         printf("main() ------\n");
 
         printf("main() -- calling init()\n");
@@ -91,7 +93,7 @@ int quit()
 {
         int i = 0;
 
-        for (i = 0; i < NMINODE; i++)
+        for (i = 0; i < ninodes; i++)
         {
                 minode[i].refCount = 0;
                 iput(&minode[i]);

@@ -1,56 +1,5 @@
 #include "../filesystem.h"
 
-// List the files in a directory
-void mkdir (char *pathname)
-{
-        printf("mkdir() -----\n");
-	int i=0, numstrs = 0, dev = 0;
-	char *strs[100], dirname[256]= "", basename[100]="";
-	int pinum = 0, inum = 0;
-	MINODE pmip = (MINODE*) malloc(sizeof(MINODE));
-	
-	//set up dev
-	if(pathname[0] == '/')
-	  dev = root->dev;
-	else
-	  dev = running->cwd->dev;
-
-	// devide pathname into base and dirname
-	numstrs = parse(pathname, "/",strs);
-	for (i = 0; i < (numstrs-2); i++){
-	  strcat(dirname, "/");
-	  strcat(dirname, strs[i]);
-	}
-	strcpy(basename, strs[numstrs-1]);
-
-	//dirname must exist and is a DIR;
-	pinum = getino(dirname, dev);
-	if(pinum ==0){
-	  printf("&s does not exist\n", dirname);
-	  return;
-	}
-	pmip = iget(dev, pinum);
-	//is it a dir?
-	if((pmip->INODE.i_mode & 0xF000) != 0x4000){ //got these numbers from lxr.free-electronics.com
-	  printf("&s is not a directory\n", dirname);
-	  return;
-	}
-
-	//basename can't exist in parent dir
-	if(search(pmip, basename) != 0){
-	  printf("%s already exists in %s\n", basename, dirname);
-	  return;
-	}
-
-	//call kmkdir()
-	kmkdir(pmip, basename, dev);
-
-	pmip->INODE.i_link_count ++;
-	pmip->dirty = 1;
-	iput(pmip);
-        printf("mkdir() -----End\n");
-}
-
 kmkdir(MINODE *pmip, char *basename, int dev)
 {
        int i = 0, inum = ialloc(dev);
@@ -141,7 +90,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
   char buf[1024], *cp;
   DIR *dp;
   //slightly different than psudo code
-  for (i=0; i < 12,i++){
+  for (i=0; i < 12;i++){
     if(pmip->INODE.i_block[i] == 0)
       break;
     
@@ -225,3 +174,55 @@ creat(char* fileName)
 	2. no data block is allocated for it, so the file size is 0
 	3. Do not increment parent INODE's link count
 }*/
+
+// List the files in a directory
+void mkdir (char *pathname)
+{
+        printf("mkdir() -----\n");
+	int i=0, numstrs = 0, dev = 0;
+	char *strs[100], dirname[256]= "", basename[100]="";
+	int pinum = 0, inum = 0;
+	MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
+	
+	//set up dev
+	if(pathname[0] == '/')
+	  dev = root->dev;
+	else
+	  dev = running->cwd->dev;
+
+	// devide pathname into base and dirname
+	numstrs = parse(pathname, "/",strs);
+	for (i = 0; i < (numstrs-2); i++){
+	  strcat(dirname, "/");
+	  strcat(dirname, strs[i]);
+	}
+	strcpy(basename, strs[numstrs-1]);
+
+	//dirname must exist and is a DIR;
+	pinum = getino(dirname, dev);
+	if(pinum ==0){
+	  printf("&s does not exist\n", dirname);
+	  return;
+	}
+	pmip = iget(dev, pinum);
+	//is it a dir?
+	if((pmip->INODE.i_mode & 0xF000) != 0x4000){ //got these numbers from lxr.free-electronics.com
+	  printf("&s is not a directory\n", dirname);
+	  return;
+	}
+
+	//basename can't exist in parent dir
+	if(search(pmip, basename) != 0){
+	  printf("%s already exists in %s\n", basename, dirname);
+	  return;
+	}
+
+	//call kmkdir()
+	kmkdir(pmip, basename, dev);
+
+	pmip->INODE.i_links_count ++;
+	pmip->dirty = 1;
+	iput(pmip);
+        printf("mkdir() -----End\n");
+}
+

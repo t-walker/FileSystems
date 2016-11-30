@@ -1,7 +1,7 @@
 
 /*********** alloc_dealloc.c file *************/
 #include "filesystem.h"
-#include "type.h"
+//#include "type.h"
 
 int tst_bit(char *buf, int bit)
 {
@@ -117,7 +117,7 @@ u32 ialloc(int dev)
  return 0;
 } 
 
-idealloc(int dev, int ino)
+int idealloc(int dev, int ino)
 {
   int i;  
   char buf[BLKSIZE];

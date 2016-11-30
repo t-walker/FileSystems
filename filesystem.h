@@ -27,11 +27,15 @@ MINODE *iget(int dev, int ino);
 void iput(MINODE *mip);
 int search(MINODE *mip, char *pathname);
 
+/* ALLOC AND DEALLOC */
+u32 ialloc(int dev);
+u32 balloc(int dev);
+
 /* FILESYTEM OPERATIONS */
 void getCommands(char* currentPath);
 /* LEVEL 1 */
 void mount_root();
-// void mkdir(char *pathname);
+void mkdir(char *pathname);
 // void rmdir(char *pathname);
 void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
