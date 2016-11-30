@@ -16,7 +16,7 @@ void pwd()
 
 int searchDirectories(int ino, int dev)
 {
-        int local_ino, pino;
+        int local_ino, pointer_ino;
         char buf[BLOCK_SIZE];
 
         DIR *dp = (DIR *) buf;
@@ -36,16 +36,16 @@ int searchDirectories(int ino, int dev)
         cp += dp->rec_len;
         dp = (DIR *) cp;
 
-        pino = dp->inode;
+        pointer_ino = dp->inode;
 
-        searchDirectories(pino, dev);
+        searchDirectories(pointer_ino, dev);
 
-        getName(local_ino, dev, pino);
+        getName(local_ino, dev, pointer_ino);
 
         iput(mip);
 }
 
-int getName(int local_ino, int local_dev, int pino)
+int getName(int local_ino, int local_dev, int pointer_ino)
 {
         char buf[BLOCK_SIZE];
         int i;
@@ -54,7 +54,7 @@ int getName(int local_ino, int local_dev, int pino)
         char c;
         MINODE *mip;
 
-        mip = iget(local_dev, pino);
+        mip = iget(local_dev, pointer_ino);
         for(i = 0; i < 12; i++)
         {
                 get_block(dev, mip->INODE.i_block[i], buf);
