@@ -5,10 +5,11 @@ void pwd()
         int ino = running->cwd->ino;
         int dev = running->cwd->dev;
 
-        if(2 == ino)
+        if(ino == 2)
         {
-                printf("/");
-        }else{
+                printf("/"); //the root
+        }
+        else {
                 searchDirectories(ino, dev);
         }
 }
