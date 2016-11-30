@@ -22,7 +22,7 @@ extern char buf[1024];
 extern char *deviceName;
 
 /* FILESYSTEM CORE */
-int getino(char *path, MINODE *mp);
+int getino(char *path, int *dev);
 MINODE *iget(int dev, int ino);
 void iput(MINODE *mip);
 int search(MINODE *mip, char *pathname);

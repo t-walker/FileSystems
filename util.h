@@ -33,23 +33,23 @@ int parse(const char* str,const char* delim, char *strs[100])
 
         int i = 0;
         char *token, *temp = strdup(str);
-        printf("parse() -- duplicating str into temp.\n");
+        printf("parse() -- duplicating str into temp\n");
         token = strtok (temp, delim);
 
-        printf("parse() -- assigning to strs[].\n");
+        printf("parse() -- assigning to strs[]\n");
 
         while (token != NULL)
         {
                 strs[i++] = token;
-                printf("----- strs[%d] = %s.\n", i-1, token);
+                printf("----- strs[%d] = %s\n", i-1, token);
                 token = strtok (NULL, delim);
         }
 
         strs[i] = NULL;
 
-        printf("parse() -- assigning strs[i] to null.\n");
-        printf("parse() -- returning i-1.\n");
-        return i - 1;
+        printf("parse() -- assigning strs[i] to null\n");
+        printf("parse() -- returning: %d\n", i);
+        return i;
 }
 
 int get_block(int fd, int blk, char buf[])

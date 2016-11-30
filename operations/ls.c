@@ -18,9 +18,9 @@ void ls (char *pathname)
                 }
 
                 printf("ls() -- calling getino\n");
-                ino = getino(&dev, pathname);
-
+                ino = getino(pathname, mip);
                 printf("ls() -- finished getino()\n");
+
                 MINODE *mip = iget(dev, ino);
                 printf("ls() -- finished iget()\n");
                 // mip points at the minode;
