@@ -1,11 +1,13 @@
 #include "../filesystem.h"
+#include <sys/stat.h>
 
-kmkdir(MINODE *pmip, char *basename, int dev)
+kmkdir(MINODE *pmip, char *basename, int pinum)
 {
-       int i = 0, inum = ialloc(dev);
-       int  blk = balloc(dev);
-       MINODE *mip = iget(dev, inum); //load INODE into and minode
-       char buf[1024];
+  printf("kmkdir() ------\n");
+       int i = 0, inum = ialloc(pmip->dev);
+       int  blk = balloc(pmip->dev);
+       MINODE *mip = iget(pmip->dev, inum); //load INODE into and minode
+       char buf[BLKSIZE];
        DIR* dp;
        char* cp;
        
@@ -49,6 +51,7 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        
        put_block(dev, blk, buf);
        insert_dir_entry(pmip, inum, basename);
+       printf("kmkdir() ------End\n");
 }
 /* Algorithm of mkdir ***
 int mkdir(char *pathname)
@@ -182,28 +185,30 @@ creat(char* fileName)
 }*/
 char* dname(char* str)
 {
-  char* temp[100] = "", ret = "";
+  printf("dname() ------ on: %s\n", str);
+  char temp[100], *ret = "";
   int i=0, j=0;
   while(str[i])
-  {
+    {//// there's a problem here
     temp[j++] = str[i];
     if(str[i] = '/'){
       temp[j++] = '\0';
       strcat(ret, temp);
       j=0;
-      temp = "";
+      temp[0] = '\0';
     }
     i++;
   }
   if(strcmp(ret, "")==0)
-    strcp(ret, ".");
-
+    strcpy(ret, ".");
+  printf("dname() ------ returning: %s\n", ret);
   return ret;
 }
 
 char* bname(char* str)
 {
-   char* ret[100] = "", temp = "";
+   printf("bname() ------\n");
+   char ret[100], *temp = "";
    int i=0,j=0;
   while(str[i])
   {
@@ -212,16 +217,17 @@ char* bname(char* str)
       ret[j++] = '\0';
       strcat(temp, ret);
       j=0;
-      ret = "";
+      ret[0] = '\0';
     }
     i++;
   }
   ret[j] = '\0';
+  printf("bname() ------ returning: %s\n", ret);
   return ret;
 }
 
 // List the files in a directory
-void mkdir (char *pathname)
+void mk_dir (char *pathname)
 {
         printf("mkdir() -----\n");
 	int i=0, numstrs = 0, dev = 0;
@@ -243,8 +249,8 @@ void mkdir (char *pathname)
 	// devide pathname into base and dirname
         dirname = dname(pathname);
 	basename = bname(pathname);
-	print("mkdir() ---dirname: %s\n",dirname);
-	print("mkdir() --basename: %s\n", basename);
+	printf("mkdir() ---dirname: %s\n",dirname);
+	printf("mkdir() --basename: %s\n", basename);
 	
 	//dirname must exist and is a DIR;
 	if(strcmp(dirname,".")==0) {
@@ -256,14 +262,14 @@ void mkdir (char *pathname)
 	else{
 	  pinum = getino(dirname, dev);
 	}
-	///////////////////////////////////////////////////////////////
+	
 	if(pinum ==0){
 	  printf("&s does not exist\n", dirname);
 	  return;
 	}
 	pmip = iget(dev, pinum);
 	//is it a dir?
-	if((pmip->INODE.i_mode & 0xF000) != 0x4000){ //got these numbers from lxr.free-electronics.com
+	if(!(S_ISDIR(pmip->INODE.i_mode))){
 	  printf("&s is not a directory\n", dirname);
 	  return;
 	}
@@ -275,9 +281,10 @@ void mkdir (char *pathname)
 	}
 
 	//call kmkdir()
-	kmkdir(pmip, basename, dev);
+	  kmkdir(pmip, basename, pinum); 
 
 	pmip->INODE.i_links_count ++;
+	  pmip->INODE.i_atime = time(0L);
 	pmip->dirty = 1;
 	iput(pmip);
         printf("mkdir() -----End\n");
