@@ -47,14 +47,14 @@ int searchDirectories(int ino, int dev)
 
 int getName(int local_ino, int local_dev, int pointer_ino)
 {
+        MINODE *mip = iget(local_dev, pointer_ino);
+
         char buf[BLOCK_SIZE];
         int i;
         DIR *dp = (DIR *) buf;
-        char *cp = buf;
-        char c;
-        MINODE *mip;
+        char *cp = buf, c;
 
-        mip = iget(local_dev, pointer_ino);
+
         for(i = 0; i < 12; i++)
         {
                 get_block(dev, mip->INODE.i_block[i], buf);
