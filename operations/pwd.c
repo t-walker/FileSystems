@@ -1,76 +1,80 @@
 #include "../filesystem.h"
 
-void pwd()
+void pwd() //should store pathname into a char[]
 {
-        int ino = running->cwd->ino;
-        int dev = running->cwd->dev;
+  int ino = running->cwd->ino;
+  int dev = running->cwd->dev;
 
-        if(2 == ino)
-        {
-                printf("/");
-        }else{
-                searchDirectories(ino, dev);
-        }
+  if(2 == ino)
+  {
+    printf("/");
+  }else{
+    searchDirectories(ino, dev);
+  }
 }
 
 int searchDirectories(int ino, int dev)
 {
-        int local_ino, pointer_ino;
-        char buf[BLOCK_SIZE];
+  int local_ino, pino;
+  char buf[BLOCK_SIZE];
 
-        DIR *dp = (DIR *) buf;
-        char *cp = buf;
-        MINODE *mip;
+  DIR *dp = (DIR *) buf;
+  char *cp = buf;
+  MINODE *mip;
 
-        if(ino == 2)
-        {
-                return 2;
-        }
+  if(2 == ino)
+  {
+    return 2;
+  }
 
-        mip = iget(dev, ino);
-        get_block(dev, mip->INODE.i_block[0], buf);
+  mip = iget(dev, ino);
+  get_block(dev, mip->INODE.i_block[0], buf);
 
-        local_ino = dp->inode;
+  local_ino = dp->inode; // ino for "."
 
-        cp += dp->rec_len;
-        dp = (DIR *) cp;
+  cp += dp->rec_len; //move to ino for ".."
+  dp = (DIR *) cp;
 
-        pointer_ino = dp->inode;
+  pino = dp->inode; // get parent inode #
 
-        searchDirectories(pointer_ino, dev);
+  searchDirectories(pino, dev);
 
-        get_directory_name(local_ino, dev, pointer_ino);
+  getName(local_ino, dev, pino);
 
-        iput(mip);
+  iput(mip);
 }
 
 
-int get_directory_name(int local_ino, int local_dev, int pointer_ino)
+/******** link_file function ***************
+ * -Works very similar to the search function.
+ * -Prints the name once found
+ ******************************************/
+int getName(int local_ino, int local_dev, int pino)
 {
-        char buf[BLOCK_SIZE];
-        int i;
-        DIR *dp = (DIR *) buf;
-        char *cp = buf;
+  char buf[BLOCK_SIZE];
+  int i;
+  DIR *dp = (DIR *) buf;
+  char *cp = buf;
+  char c;
+  MINODE *mip;
 
-        MINODE *mip;
-
-        mip = iget(local_dev, pointer_ino);
-        for(i = 0; i < 12; i++)
-        {
-                get_block(dev, mip->INODE.i_block[i], buf);
-                while(cp < buf + BLOCK_SIZE)
-                {
-                        if(dp->inode == local_ino)
-                        {
-                                char c = dp->name[dp->name_len];
-                                dp->name[dp->name_len] = 0;
-                                printf("/%s", dp->name);
-                                c = dp->name[dp->name_len];
-                                return 1;
-                        }
-                        cp += dp->rec_len;
-                        dp = (DIR *) cp;
-                }
-        }
-        return 0;
+  mip = iget(local_dev, pino);
+  for(i = 0; i < 12; i++)
+  {
+    get_block(dev, mip->INODE.i_block[i], buf);
+    while(cp < buf + BLOCK_SIZE)
+    {
+      if(dp->inode == local_ino)
+      {
+        c = dp->name[dp->name_len];
+        dp->name[dp->name_len] = 0;
+        printf("/%s", dp->name);
+        c = dp->name[dp->name_len];
+        return 1;
+      }
+      cp += dp->rec_len;
+      dp = (DIR *) cp;
+    }
+  }
+  return 0;
 }
