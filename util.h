@@ -87,5 +87,4 @@ void printDir(INODE ptr, int dev)
         {
           printf("not a directory!\n");
         }
-
 }

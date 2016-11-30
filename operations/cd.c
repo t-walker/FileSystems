@@ -4,11 +4,9 @@
 void cd(char *pathname)
 {
         printf("cd() -------\n");
+        int ino = running->cwd->ino, dev = running->cwd->dev;
 
-        int inum;
-        MINODE *mip = running->cwd->dev;
         parse(pathname, "/", path);
-        dev = running->cwd->dev;
 
         printf("cd() -- assigned variables and finished parsing\n");
 
@@ -21,10 +19,10 @@ void cd(char *pathname)
 
                 }
                 printf("cd() -- getting the inum\n");
-                inum = getino(pathname, &dev);
-                printf("cd() -- got the inum: %d\n", inum);
+                ino = getino(pathname, dev);
+                printf("cd() -- got the inum: %d\n", ino);
 
-                running->cwd = iget(dev, inum);
+                running->cwd = iget(dev, ino);
                 printf("cd() -- changed the directory\n");
                 printf("cd() -- running->cwd->ino: %d\n", running->cwd->ino);
         }
