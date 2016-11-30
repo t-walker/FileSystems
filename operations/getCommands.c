@@ -33,6 +33,11 @@ void getCommands(char* currentPath)
                 {
                         cd(strs[1]);
                 }
+		else if(strcmp(strs[0], "mkdir")==0)
+		{
+		  printf("about to do mkdir %s\n",strs[1]);
+		  mkdir(strs[1]);
+		}
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
