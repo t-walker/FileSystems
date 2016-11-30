@@ -101,7 +101,7 @@ u32 ialloc(int dev)
 
  // get inode Bitmap into buf
  get_block(dev, imap, buf);
- 
+ printf("ialloc() --- imap = %d\n",imap);
  for (i=0; i < ninodes; i++){
    if (tst_bit(buf, i)==0){
      set_bit(buf, i);

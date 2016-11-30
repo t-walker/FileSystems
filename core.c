@@ -62,15 +62,17 @@ int getino(char *path, int *dev)
 // Retrieves an inode given a dev and an inode.
 MINODE *iget(int dev, int ino)
 {
-        //printf("iget() ------\n");
+  //printf("iget() ------\n");
         MINODE *mip = malloc(sizeof(MINODE));
         int i, blk_num, offset;
         //printf("iget() -- allocated *mip.\n");
 
         //Loop through all of the minodes to see if the one we want is in memory
         for (i = 0; i < NMINODE; i++) {
+	  //printf("iget() --- inode index in minode: %d\n",i);
                 if (minode[i].ino == ino) // Is this the inode we're looking for?
                 {
+		  //printf("iget() --- inode already in memory\n",i);
                         minode[i].refCount++; // Add the reference of it.
                         return &minode[i];
                 }
@@ -96,8 +98,10 @@ MINODE *iget(int dev, int ino)
 
         //Loop through all of the minodes until we find one that is empty
         for (i = 0; i < NMINODE; i++) {
+	  //printf("iget() --- inode index in minode: %d\n",i);
                 if (minode[i].refCount == 0) //Check to make sure it's empty
                 {
+		  // printf("iget() --- found an empty space in minode\n",i);
                         /***
                          * 1. Set the minode's inode to the temorary inode
                          * 2. Set the dirty value to 0

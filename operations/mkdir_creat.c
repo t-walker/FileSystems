@@ -31,6 +31,7 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        memset(buf, 0, 1024);
        dp = (DIR*)buf;
 
+       printf("kmkdir--- inum: %d\n",inum);
        dp->inode = inum;
        strcpy(dp->name, ".");
        dp->name_len = 1;
@@ -40,6 +41,7 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        cp += dp->rec_len;
        dp = (DIR*)cp;
 
+       printf("kmkdir--- pmip->in0: %d\n",pmip->ino);
        dp->inode = pmip->ino;
        dp->name_len = 2;
        strcpy(dp->name, "..");
@@ -84,6 +86,7 @@ int mkdir(char *pathname)
 
 void insert_dir_entry(MINODE *pmip,int inum, char *basename)
 {
+   printf("insert_dir_entry() ---\n");
   int need_len = 4*((8 + strlen(basename) + 3)/4);
   int ideal_len = 0, remain=0;
   int i = 0, blk = 0;
@@ -100,6 +103,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
     dp = (DIR*)buf;
     cp = buf;
     //get to the last one
+    printf("insert_dir_entry() --- while\n");
     while(cp + dp->rec_len < buf + BLKSIZE) {
       cp += dp->rec_len;
       dp = (DIR*) cp;
@@ -118,6 +122,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
       //dp->file_type?
       strcpy(dp->name, basename);
       put_block(pmip->dev, blk, buf);
+       printf("insert_dir_entry() --- inside if(remain >= need_len)\n");
       return;
     } 
     // moved after the for b/c it will handle two if/else cases else{ //no space, need to allocate}
@@ -139,6 +144,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
   strcpy(dp->name, basename);
   
   put_block(pmip->dev, blk, buf);
+  printf("insert_dir_entry() --- END\n");
   return;
 }
 
@@ -174,32 +180,83 @@ creat(char* fileName)
 	2. no data block is allocated for it, so the file size is 0
 	3. Do not increment parent INODE's link count
 }*/
+char* dname(char* str)
+{
+  char* temp[100] = "", ret = "";
+  int i=0, j=0;
+  while(str[i])
+  {
+    temp[j++] = str[i];
+    if(str[i] = '/'){
+      temp[j++] = '\0';
+      strcat(ret, temp);
+      j=0;
+      temp = "";
+    }
+    i++;
+  }
+  if(strcmp(ret, "")==0)
+    strcp(ret, ".");
+
+  return ret;
+}
+
+char* bname(char* str)
+{
+   char* ret[100] = "", temp = "";
+   int i=0,j=0;
+  while(str[i])
+  {
+    ret[j++] = str[i];
+    if(str[i] = '/'){
+      ret[j++] = '\0';
+      strcat(temp, ret);
+      j=0;
+      ret = "";
+    }
+    i++;
+  }
+  ret[j] = '\0';
+  return ret;
+}
 
 // List the files in a directory
 void mkdir (char *pathname)
 {
         printf("mkdir() -----\n");
 	int i=0, numstrs = 0, dev = 0;
-	char *strs[100], dirname[256]= "", basename[100]="";
+	char *strs[100], *dirname= "", *basename="";
 	int pinum = 0, inum = 0;
 	MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
+	MINODE *mip;
 	
 	//set up dev
-	if(pathname[0] == '/')
+	if(pathname[0] == '/'){
+	  mip = root;
 	  dev = root->dev;
-	else
+	}
+	else{
+	  mip = running->cwd;
 	  dev = running->cwd->dev;
+	}
 
 	// devide pathname into base and dirname
-	numstrs = parse(pathname, "/",strs);
-	for (i = 0; i < (numstrs-2); i++){
-	  strcat(dirname, "/");
-	  strcat(dirname, strs[i]);
-	}
-	strcpy(basename, strs[numstrs-1]);
-
+        dirname = dname(pathname);
+	basename = bname(pathname);
+	print("mkdir() ---dirname: %s\n",dirname);
+	print("mkdir() --basename: %s\n", basename);
+	
 	//dirname must exist and is a DIR;
-	pinum = getino(dirname, dev);
+	if(strcmp(dirname,".")==0) {
+	  pinum = running->cwd->ino;
+	}
+	else if(strcmp(dirname,"/") == 0){
+	  pinum = root->ino;
+	}
+	else{
+	  pinum = getino(dirname, dev);
+	}
+	///////////////////////////////////////////////////////////////
 	if(pinum ==0){
 	  printf("&s does not exist\n", dirname);
 	  return;
