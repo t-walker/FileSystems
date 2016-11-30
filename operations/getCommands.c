@@ -25,21 +25,11 @@ void getCommands(char* currentPath)
 
                 if(strcmp(strs[0], "ls")==0)
                 {
-                        if(strs[1] != NULL)
-                        {
-                                ls(strs[1]);
-                        }
-                        else
-                        {
-                                ls(currentPath);
-                        }
+                  ls(strs[1]);
                 }
                 else if(strcmp(strs[0], "cd")==0)
                 {
-                        if(strs[1]!= NULL)
-                        {
-                                cd(strs[1]);
-                        }
+                  cd(strs[1]);
                 }
 
                 printf("\n");

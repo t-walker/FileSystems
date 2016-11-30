@@ -49,7 +49,6 @@ int getino(char *path, int *dev)
                         return 0;
                 }
 
-                mip = (MINODE*)buf + offset;
                 printf("getino() -- setting mp to buf + offset.\n");
 
                 iput(mip);

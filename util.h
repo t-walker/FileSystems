@@ -67,17 +67,25 @@ int put_block(int fd, int blk, char buf[])
 //TODO: make this a more detailed printout
 void printDir(INODE ptr, int dev)
 {
-        printf("printDir()\n");
-        char buf[1024];
-        char *cp;
-        get_block(dev, ptr.i_block[0],buf);
-        dp = (DIR *)buf;
-        cp = buf;
+        if((ptr.i_mode & 0x4000) == 0x4000)
+        {
+          printf("printDir()\n");
+          char buf[1024];
+          char *cp;
+          get_block(dev, ptr.i_block[0],buf);
+          dp = (DIR *)buf;
+          cp = buf;
 
-        while(cp < buf + 1024) {
-                printf ("%s\n", dp->name);
-                cp += dp->rec_len;
-                dp = (DIR *) cp; //shut up
+          while(cp < buf + 1024) {
+                  printf ("%s\n", dp->name);
+                  cp += dp->rec_len;
+                  dp = (DIR *) cp; //shut up
+          }
+          printf("finished printDir()\n");
         }
-        printf("finished printDir()\n");
+        else
+        {
+          printf("not a directory!\n");
+        }
+
 }
