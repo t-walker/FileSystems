@@ -1,9 +1,0 @@
-#include "../filesystem.h"
-
-// List the files in a directory
-void mkdir (char *pathname)
-{
-        printf("mkdir() -----\n");
-	
-        printf("mkdir() -----End\n");
-}
