@@ -18,12 +18,12 @@ void getCommands(char* currentPath)
                 fgets(command, 250, stdin);
                 parse(strip(command), " ", strs);
 
-                //TODO: replace this with calling the commands
-                while(i<100 && strs[i]!=NULL)
-                {
-                        printf("%s ", strs[i]);
-                        i++;
-                }
+                // //TODO: replace this with calling the commands
+                // while(i<100 && strs[i]!=NULL)
+                // {
+                //         printf("%s ", strs[i]);
+                //         i++;
+                // }
 
                 if(strcmp(strs[0], "ls")==0)
                 {
@@ -32,6 +32,10 @@ void getCommands(char* currentPath)
                 else if(strcmp(strs[0], "cd")==0)
                 {
                         cd(strs[1]);
+                }
+                else if(strcmp(strs[0], "pwd")==0)
+                {
+                        pwd();
                 }
 		else if(strcmp(strs[0], "mkdir")==0)
 		{
