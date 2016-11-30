@@ -18,7 +18,7 @@ extern int imap;
 extern int inode_start;
 
 extern char path[200];
-extern char  buf[1024];
+extern char buf[1024];
 extern char *deviceName;
 
 /* FILESYSTEM CORE */
