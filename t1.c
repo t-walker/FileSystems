@@ -22,8 +22,6 @@ int inode_start;
 
 char path[200], buf[1024], *deviceName = "disk";
 
-
-
 void init()
 {
         printf("init() ------\n");
@@ -33,23 +31,22 @@ void init()
         MINODE *mip;
         PROC *p;
 
-        printf("iget() -- initalized variables.\n");
+        printf("iget() -- initalized variables\n");
 
         // 1) 2 PROCs, P0 with uid=0, P1 with uid=1, all PROC.cwd = 0
         for (i = 0; i < NPROC; i++) {
-                p = &minode[i];
-                p->uid = i;
-                p->pid = i+1;
-                p->cwd = 0;
-                p->status = FREE;
+                proc[i].uid = i;
+                proc[i].pid = i+1;
+                proc[i].cwd = 0;
+                proc[i].status = FREE;
         }
 
-        printf("iget() -- added two empty procs.\n");
+        printf("iget() -- added two empty procs\n");
 
         running = malloc(sizeof(PROC));
         running = &proc[0];
 
-        printf("iget() -- set running.\n");
+        printf("iget() -- set running\n");
 
         // 2) MINODE minode[100]; all with refCount = 0
         for (i = 0; i < NMINODE; i++) {
@@ -57,11 +54,11 @@ void init()
                 mip->dev = mip->ino = 0;
                 mip->refCount = 0;
         }
-        printf("iget() -- created empty MINODES.\n");
+        printf("iget() -- created empty MINODES\n");
 
         // 3) MINODE *root = 0;
         root = 0;
-        printf("iget() -- set the root to 0.\n");
+        printf("iget() -- set the root to 0\n");
 
 }
 

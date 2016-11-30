@@ -4,13 +4,13 @@
 // gets the inode number given a path and an minode.
 int getino(char *path, MINODE *mp)
 {
-        printf("getino() ------\n.");
+        printf("getino() ------\n");
 
         int i, n, inum = 0, bnum, offset;
-        printf("getino() -- initalized variables.\n");
+        printf("getino() -- initalized variables\n");
 
         MINODE *temp = (MINODE*) malloc(sizeof(MINODE));
-        printf("getino() -- created a temporary MINODE.\n");
+        printf("getino() -- created a temporary MINODE\n");
 
         char *strs[100];
 
@@ -18,21 +18,24 @@ int getino(char *path, MINODE *mp)
         if(path[0] == '/') {
                 dev = root->dev;
                 inum = root->ino;
-                printf("getino() -- the path begins at root.\n");
+                printf("getino() -- the path begins at root\n");
         }
         else {
                 dev = running->cwd->dev;
                 inum = root->ino;
-                printf("getino() -- the path is relative.\n");
+                printf("getino() -- the path is relative\n");
         }
 
+        printf("getino() -- parsing the path\n");
+        printf("getino() -- path: %s\n", path);
+
         n = parse(path, "/", strs);
-        printf("getino() -- parsing the path.\n");
 
         for (i = 0; i < n; i++)
         {
                 printf("path %s\n", strs[i]);
                 inum = search(mp, strs[i]);
+                printf("getino() -- inum: %d\n", inum);
 
                 if(inum == 0)
                 {
@@ -43,11 +46,11 @@ int getino(char *path, MINODE *mp)
                 offset = (inum - 1) % 8; //for char
                 get_block(dev, ((inum - 1)/8) + inode_start, buf);
                 mp = (MINODE*)buf + offset;
-                printf("getino() -- setting mp to buf + offset.\n");
+                printf("getino() -- setting mp to buf + offset\n");
 
                 iput(mp);
         }
-        printf("getino() -- returning inum.\n");
+        printf("getino() -- returning inum\n");
 
         return inum;
 }
@@ -59,7 +62,7 @@ MINODE *iget(int dev, int ino)
         printf("iget() ------\n");
         MINODE *mip = malloc(sizeof(MINODE));
         int i, blk_num, offset;
-        printf("iget() -- allocated *mip.\n");
+        printf("iget() -- allocated *mip\n");
 
         //Loop through all of the minodes to see if the one we want is in memory
         for (i = 0; i < NMINODE; i++) {
@@ -70,18 +73,18 @@ MINODE *iget(int dev, int ino)
                 }
         }
 
-        printf("iget() -- found the MINODE.\n");
+        printf("iget() -- found the MINODE\n");
 
         //Use mailman's to get the block location
         blk_num = ((ino - 1)/8) + inode_start;
         offset = (ino - 1) % 8;
         printf("iget() -- mailman's algorithm:\n");
-        printf("iget() -- blk_num %d.\n", blk_num);
-        printf("iget() -- offset %d.\n", offset);
+        printf("iget() -- blk_num %d\n", blk_num);
+        printf("iget() -- offset %d\n", offset);
 
         //Get the block
         get_block(dev, blk_num, buf);
-        printf("iget() -- got the block for the blk_num.\n");
+        printf("iget() -- got the block for the blk_num\n");
 
         ip = (INODE *)buf + offset;
         printf("iget() -- got the INODE\n");
@@ -104,8 +107,8 @@ MINODE *iget(int dev, int ino)
                         minode[i].ino = ino;
                         minode[i].refCount = 1;
 
-                        printf("iget() -- Empty MINODE found.\n");
-                        printf("iget() -- Returning MINODE.\n");
+                        printf("iget() -- Empty MINODE found\n");
+                        printf("iget() -- Returning MINODE\n");
 
                         //Return the index of the inode
                         return &minode[i];
@@ -121,23 +124,23 @@ void iput(MINODE *mip)
 
         int blk_num, offset;
         mip->refCount -= 1;
-        printf("iput() -- Decrementing the refCount of the MINODE.\n");
+        printf("iput() -- Decrementing the refCount of the MINODE\n");
 
         if (mip->refCount == 0)
         {
-                printf("iput() -- MINODE refCount is 0.\n");
+                printf("iput() -- MINODE refCount is 0\n");
 
                 blk_num = ((mip->ino - 1)/8) + inode_start;
                 offset = (mip->ino-1) % 8;
-                printf("iput() -- blk_num: %d.\n", blk_num);
-                printf("iput() -- offset: %d.\n", offset);
+                printf("iput() -- blk_num: %d\n", blk_num);
+                printf("iput() -- offset: %d\n", offset);
 
                 get_block(mip->dev, blk_num, buf);
-                printf("iput() -- got the block.\n");
+                printf("iput() -- got the block\n");
 
                 ip = (INODE *)buf + offset;
                 memcpy(ip, &(mip->INODE), sizeof(INODE));
-                printf("iput() -- copied the block to memory.\n");
+                printf("iput() -- copied the block to memory\n");
 
                 put_block(dev, blk_num, buf);
                 printf("iput() -- put the block\n");
@@ -157,7 +160,8 @@ int search(MINODE *mip, char *pathname)
 
         for(i = 0; i < 12; i++)
         {
-                printf("search() -- loop: %d.\n", i);
+                printf("search() -- loop: %d\n", i);
+
                 if(mip->INODE.i_block[i])
                 {
                         printf("----- mip->INODE.i_block[%d] isn't null", i);
