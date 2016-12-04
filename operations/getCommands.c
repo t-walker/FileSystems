@@ -40,7 +40,7 @@ void getCommands(char* currentPath)
 		else if(strcmp(strs[0], "mkdir")==0)
 		{
 		  printf("about to do mkdir %s\n",strs[1]);
-		  mkdir(strs[1]);
+		  mk_dir(strs[1]);
 		}
 
                 printf("\n");

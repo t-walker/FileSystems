@@ -5,6 +5,7 @@ void cd(char *pathname)
 {
         printf("cd() -------\n");
         int ino = running->cwd->ino, dev = running->cwd->dev;
+        MINODE *mip;
 
         parse(pathname, "/", path);
 
@@ -16,15 +17,24 @@ void cd(char *pathname)
                 {
                         dev = root->dev; // Start it at the root.
                         printf("cd() -- assigning to root\n");
-
                 }
                 printf("cd() -- getting the inum\n");
                 ino = getino(pathname, dev);
                 printf("cd() -- got the inum: %d\n", ino);
 
-                running->cwd = iget(dev, ino);
-                printf("cd() -- changed the directory\n");
-                printf("cd() -- running->cwd->ino: %d\n", running->cwd->ino);
+                mip = iget(dev, ino);
+
+                if (S_ISDIR(mip->INODE.i_mode))
+                {
+                        printDir(mip->INODE, dev);
+                        running->cwd = mip;
+                        printf("cd() -- changed the directory\n");
+                        printf("cd() -- running->cwd->ino: %d\n", running->cwd->ino);
+                }
+                else
+                {
+                        printf("cd() -- cannot cd into a file\n");
+                }
         }
         else
         {

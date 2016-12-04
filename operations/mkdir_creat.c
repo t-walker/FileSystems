@@ -8,7 +8,7 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        char buf[1024];
        DIR* dp;
        char* cp;
-       
+
        //initialize mip->INODE as a DIR INODE
        mip->INODE.i_mode = 0x41ED; //mode is dir with permissions
        mip->INODE.i_uid = running->uid;
@@ -23,10 +23,10 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        mip->INODE.i_block[0] = blk;
        for (i=1; i < 15; i++)
 	 mip->INODE.i_block[i] = 0;
-       
+
        mip->dirty = 1;
        iput(mip); //write INODE back to disk
-       
+
        //make data block
        memset(buf, 0, 1024);
        dp = (DIR*)buf;
@@ -44,7 +44,7 @@ kmkdir(MINODE *pmip, char *basename, int dev)
        dp->name_len = 2;
        strcpy(dp->name, "..");
        dp->rec_len= BLKSIZE - 12;
-       
+
        put_block(dev, blk, buf);
        insert_dir_entry(pmip, inum, basename);
 }
@@ -93,7 +93,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
   for (i=0; i < 12;i++){
     if(pmip->INODE.i_block[i] == 0)
       break;
-    
+
     blk = pmip->INODE.i_block[i];
 
     get_block(pmip->dev, blk, buf);
@@ -119,9 +119,9 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
       strcpy(dp->name, basename);
       put_block(pmip->dev, blk, buf);
       return;
-    } 
+    }
     // moved after the for b/c it will handle two if/else cases else{ //no space, need to allocate}
-      
+
   }
   //couldn't find a block to use
 
@@ -137,7 +137,7 @@ void insert_dir_entry(MINODE *pmip,int inum, char *basename)
   dp->name_len = strlen(basename);
   //dp->file_type?
   strcpy(dp->name, basename);
-  
+
   put_block(pmip->dev, blk, buf);
   return;
 }
@@ -176,14 +176,14 @@ creat(char* fileName)
 }*/
 
 // List the files in a directory
-void mkdir (char *pathname)
+void mk_dir (char *pathname)
 {
         printf("mkdir() -----\n");
 	int i=0, numstrs = 0, dev = 0;
 	char *strs[100], dirname[256]= "", basename[100]="";
 	int pinum = 0, inum = 0;
 	MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
-	
+
 	//set up dev
 	if(pathname[0] == '/')
 	  dev = root->dev;
@@ -225,4 +225,3 @@ void mkdir (char *pathname)
 	iput(pmip);
         printf("mkdir() -----End\n");
 }
-

@@ -4,6 +4,7 @@
 /* INCLUDES */
 #include <fcntl.h>
 #include "type.h"
+#include <sys/stat.h>
 
 /* EXTERNS */
 extern MINODE minode[NMINODE];
@@ -35,11 +36,11 @@ u32 balloc(int dev);
 void getCommands(char* currentPath);
 /* LEVEL 1 */
 void mount_root();
-void mkdir(char *pathname);
+void mk_dir(char *pathname);
 // void rmdir(char *pathname);
 void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
-// void pwd();
+void pwd();
 // void creat();
 // void link();
 // void unlink();

@@ -31,15 +31,20 @@ void ls (char *pathname)
                 // print the neame of strings of the DIR entries
 
                 printf("ls() -- calling printDir()\n");
-                // if(mip->dINODE.i_mode & 0xF000) == 0xA000)
-                // {
-                //
-                // }
-                printDir(mip->INODE, dev);
+
+                if (S_ISDIR(mip->INODE.i_mode))
+                {
+                  printf("IS directory\n");
+                  printDir(mip->INODE, dev);
+                }
+                else
+                {
+                  printf("IS NOT A DIRECTORY");
+                }
+
         }
         else
         {
-
                 printDir(mip->INODE, dev);
         }
 }
