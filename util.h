@@ -77,7 +77,7 @@ void printDir(INODE ptr, int dev)
           cp = buf;
 
           while(cp < buf + 1024) {
-                  //printf ("%s\n", dp->name);
+                  printf ("%s\n", dp->name);
                   cp += dp->rec_len;
                   dp = (DIR *) cp; //shut up
           }
