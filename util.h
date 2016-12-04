@@ -41,6 +41,7 @@ int parse(const char* str,const char* delim, char *strs[100])
         while (token != NULL)
         {
                 strs[i++] = token;
+
                 //printf("----- strs[%d] = %s\n", i-1, token);
                 token = strtok (NULL, delim);
         }
