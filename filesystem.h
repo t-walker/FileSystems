@@ -6,6 +6,7 @@
 #include "type.h"
 #include <sys/stat.h>
 #include <math.h>
+#include <time.h>
 
 /* EXTERNS */
 extern MINODE minode[NMINODE];
@@ -48,8 +49,7 @@ void pwd();
 // void symlink();
 // void stat();
 void ch_mod(char *args[], int argv);
-// void touch();
-
+void touch(char *argv[], int argc);
 /* LEVEL 2 */
 // void open();
 // void close();

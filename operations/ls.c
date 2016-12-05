@@ -39,7 +39,7 @@ void ls (char *pathname)
                 }
                 else
                 {
-                  //printf("IS NOT A DIRECTORY");
+                  printf("IS NOT A DIRECTORY");
                 }
 
         }

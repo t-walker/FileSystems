@@ -54,7 +54,17 @@ void getCommands(char* currentPath)
                     printf("getCommands() -- Not enough arugments");
                   }
                 }
-
+                else if(strcmp(strs[0], "touch") == 0)
+                {
+                  if (argv >= 2)
+                  {
+                    touch(strs, argv);
+                  }
+                  else
+                  {
+                    printf("getCommands() -- Not enough arugments");
+                  }
+                }
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
                         break;

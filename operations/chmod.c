@@ -34,6 +34,11 @@ void ch_mod(char *args[], int argv)
   printf("Permission octal: %3o\n", permission_i);
   u16 permission_o = 0;
 
+  if (args[1][0] == '/')
+  {
+    dev = root->dev;
+  }
+
   ino = getino(path, dev);
 
   printf("chmod() -- path: %s\n", path);

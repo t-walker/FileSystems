@@ -149,6 +149,10 @@ void iput(MINODE *mip)
                 put_block(dev, blk_num, buf);
                 //printf("iput() -- put the block\n");
         }
+        else
+        {
+          printf("iput() -- refCount not zero\n");
+        }
 }
 
 // SEARCH

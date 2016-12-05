@@ -65,27 +65,29 @@ int put_block(int fd, int blk, char buf[])
         write(fd, buf, BLKSIZE);
 }
 
-//TODO: make this a more detailed printout
 void printDir(INODE ptr, int dev)
 {
+
         if((ptr.i_mode & 0x4000) == 0x4000)
         {
-          //printf("printDir()\n");
-          char buf[1024];
-          char *cp;
-          get_block(dev, ptr.i_block[0],buf);
-          dp = (DIR *)buf;
-          cp = buf;
+                time_t t;
+                //printf("printDir()\n");
+                char buf[1024];
+                char *cp;
+                get_block(dev, ptr.i_block[0],buf);
+                dp = (DIR *)buf;
+                cp = buf;
 
-          while(cp < buf + 1024) {
-                  printf ("%s\n", dp->name);
-                  cp += dp->rec_len;
-                  dp = (DIR *) cp; //shut up
-          }
-          //printf("finished printDir()\n");
+                while(cp < buf + 1024) {
+                        t = ptr.i_mtime;
+                        printf("%4d  %4d  %4d  %15s \t %20s", dp->inode, dp->rec_len, dp->name_len, dp->name, ctime(&t)); //prints out traversal
+                        cp += dp->rec_len;
+                        dp = (DIR *) cp; //shut up
+                }
+                //printf("finished printDir()\n");
         }
         else
         {
-          //printf("not a directory!\n");
+                //printf("not a directory!\n");
         }
 }

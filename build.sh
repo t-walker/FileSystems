@@ -17,6 +17,7 @@ gcc -w -m32 t1.c core.c alloc_dealloc.c \
   operations/mkdir_creat.c \
   operations/pwd.c \
   operations/chmod.c \
+  operations/touch.c \
   -o filesystem -lm
 if [ -f "filesystem" ]
 then
