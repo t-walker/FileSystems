@@ -7,6 +7,7 @@ void getCommands(char* currentPath)
         char command[250];
         char* strs[100];
         int i = 0;
+        int argv;
         printf("getCommands()---\n");
 
         while(1)
@@ -16,7 +17,7 @@ void getCommands(char* currentPath)
                 pwd();
                 printf("$ ");
                 fgets(command, 250, stdin);
-                parse(strip(command), " ", strs);
+                argv = parse(strip(command), " ", strs);
 
                 // //TODO: replace this with calling the commands
                 // while(i<100 && strs[i]!=NULL)
@@ -37,11 +38,22 @@ void getCommands(char* currentPath)
                 {
                         pwd();
                 }
-		else if(strcmp(strs[0], "mkdir")==0)
-		{
-		  printf("about to do mkdir %s\n",strs[1]);
-		  mk_dir(strs[1]);
-		}
+                else if(strcmp(strs[0], "mkdir")==0)
+                {
+                        printf("about to do mkdir %s\n",strs[1]);
+                        mk_dir(strs[1]);
+                }
+                else if(strcmp(strs[0], "chmod") == 0)
+                {
+                  if (argv == 3)
+                  {
+                    ch_mod(strs, argv);
+                  }
+                  else
+                  {
+                    printf("getCommands() -- Not enough arugments");
+                  }
+                }
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)

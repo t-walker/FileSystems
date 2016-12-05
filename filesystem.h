@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include "type.h"
 #include <sys/stat.h>
+#include <math.h>
 
 /* EXTERNS */
 extern MINODE minode[NMINODE];
@@ -46,7 +47,7 @@ void pwd();
 // void unlink();
 // void symlink();
 // void stat();
-// void chmod();
+void ch_mod(char *args[], int argv);
 // void touch();
 
 /* LEVEL 2 */
