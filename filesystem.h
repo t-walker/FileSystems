@@ -47,7 +47,7 @@ void mk_dir(char *pathname);
 void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
 void pwd();
-// void creat();
+void my_creat(char *pathname);
 // void link();
 // void unlink();
 // void symlink();
