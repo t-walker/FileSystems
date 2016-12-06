@@ -90,7 +90,7 @@ void print_child_inodes(MINODE *mip, int dev)
                 }
                 else
                 {
-
+                  return;
                 }
         }
 
@@ -143,10 +143,9 @@ void print_dir_entry(int dev, MINODE *mip, char *entry_name)
     }
   }
 
-  printf("%10o ", mip->INODE.i_mode);
   printf("%5d ", mip->INODE.i_gid);
   printf("%5d ", mip->INODE.i_uid);
-  printf("%10d\t", mip->INODE.i_size);
+  printf("%10d ", mip->INODE.i_size);
 
   t = mip->INODE.i_mtime;
 
