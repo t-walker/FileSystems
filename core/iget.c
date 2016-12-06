@@ -18,10 +18,10 @@ MINODE *iget(int dev, int ino)
                         printf("iget() -- refCount for %d is now: %d\n", i, minode[i].refCount);
                         return &minode[i];
                 }
-                if(minode[i].refCount == 0)
+              /*  if(minode[i].refCount == 0)
                 {
                   break;
-                }
+                }*/
         }
         /***** adding stuff ****/
         get_block(dev, 2, mybuf);
@@ -47,7 +47,7 @@ MINODE *iget(int dev, int ino)
 
 
         //Loop through all of the minodes until we find one that is empty
-      /* testing something
+
         for (i = 0; i < NMINODE; i++) {
                 if (minode[i].refCount == 0) //Check to make sure it's empty
                 {
@@ -69,6 +69,6 @@ MINODE *iget(int dev, int ino)
 
                         //Return the index of the inode
                         return &minode[i];
-              /*  }
-        }*/
+                }
+        }
 }

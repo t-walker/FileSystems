@@ -9,7 +9,7 @@
  * 5. Call mymkdir to add new dir to parent
  * 6. Link count++, dirty=1, Update a_time
  ******************************************/
-void mk_dir(char *pathname)
+/*void mk_dir(char *pathname)
 {
   char temp_parent[256];
   char temp_child[256];
@@ -105,7 +105,7 @@ void mk_dir(char *pathname)
  * 3. Add . and ..
  * 4. Call entername to add dir to parent
  ******************************************/
-int mymkdir(MINODE *pip, char *name, int pino)
+/*int mymkdir(MINODE *pip, char *name, int pino)
 {
   int ino, bno, i;
   MINODE *mip;
@@ -152,7 +152,7 @@ int mymkdir(MINODE *pip, char *name, int pino)
    *
    ************************************/
   //create directory entries for . and ..
-  get_block(pip->dev, bno, mybuf);
+  /*get_block(pip->dev, bno, mybuf);
 
   char *cp = mybuf;
   DIR *dp = (DIR *)cp;
@@ -176,14 +176,14 @@ int mymkdir(MINODE *pip, char *name, int pino)
 
   //Will add the actual directory to the parent
   enter_name(pip, ino, name);
-}
+}*/
 
 /******** enter_name *******************
  * 1. Look through the direct blocks
  * 2. If we find one then add new dir
  * 3. Otherwise allocate a new block and add the dir
  ******************************************/
-int enter_name(MINODE *pip, int ino, char *name)
+/*int enter_name(MINODE *pip, int ino, char *name)
 {
   int i,j, bno;
   int need_length, ideal_length, remain;
@@ -263,7 +263,7 @@ int enter_name(MINODE *pip, int ino, char *name)
   }
 
   put_block(pip->dev, bno, mybuf);
-}
+}*/
 /******** end of make directory functions ********/
 
 
@@ -273,7 +273,7 @@ int enter_name(MINODE *pip, int ino, char *name)
 
 
 
-/*kmkdir(MINODE *pmip,const char *basename, int pinum)
+kmkdir(MINODE *pmip,const char *basename, int pinum)
 {
     printf("kmkdir() ------\n");
     printf("kmkdir() --- basename = %s\n", basename);
@@ -368,7 +368,7 @@ int mkdir(char *pathname)
      6. increment parent INODE's links_count by 1 and make pmip dirty; iput(pmip);
      }*/
 
-/*void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
+void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
 {
    printf("insert_dir_entry() ---\n");
 
@@ -434,7 +434,7 @@ int mkdir(char *pathname)
   printf("insert_dir_entry() --- END\n");
 
   return;
-}*/
+}
 
 /* insert_dir_entry*
 (1). need_len = 4*((8 + name_len + 3)/4); //new entry need length
@@ -517,7 +517,7 @@ char* bname(const char* str)
 }
 
 // List the files in a directory
-/*void mk_dir (char *pathname)
+void mk_dir (char *pathname)
 {
         printf("mkdir() -----\n");
 	int i=0, numstrs = 0, dev = 0;
@@ -583,4 +583,3 @@ char* bname(const char* str)
 	iput(pmip);
         printf("mkdir() -----End\n");
 }
-*/
