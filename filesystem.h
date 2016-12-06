@@ -36,6 +36,7 @@ int search(MINODE *mip, char *pathname);
 int ialloc(int dev);
 int balloc(int dev);
 
+
 /* FILESYTEM OPERATIONS */
 void getCommands(char* currentPath);
 void quit();
@@ -43,11 +44,11 @@ void quit();
 /* LEVEL 1 */
 void mount_root();
 void mk_dir(char *pathname);
-// void rmdir(char *pathname);
+void rm_dir(char *pathname);
 void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
 void pwd();
-// void creat();
+void my_creat(char *pathname);
 // void link();
 // void unlink();
 // void symlink();

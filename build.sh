@@ -19,6 +19,7 @@ gcc -w -m32 main.c alloc_dealloc.c \
   operations/chmod.c \
   operations/touch.c \
   operations/quit.c \
+  operations/rmdir.c \
   core/get_put_block.c \
   core/getino.c \
   core/iget.c \

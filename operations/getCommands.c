@@ -68,9 +68,10 @@ void getCommands(char* currentPath)
                 {
                   quit();
                 }
-		            else if(strcmp(strs[0], "mkdir")==0)
+                //creat goes here
+                else if(strcmp(strs[0], "rmdir")==0)
 		            {
-		                  mk_dir(strs[1]);
+		                  rm_dir(strs[1]);
 		            }
 
                 printf("\n");
