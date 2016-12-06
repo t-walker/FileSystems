@@ -9,7 +9,7 @@ echo "${NC}Removing files."
 rm filesystem
 echo "Filesystem obj removed."
 echo "Running gcc."
-gcc -w -m32 t1.c core.c alloc_dealloc.c \
+gcc -w -m32 main.c alloc_dealloc.c \
   operations/mount_root.c \
   operations/cd.c \
   operations/ls.c \
@@ -17,6 +17,13 @@ gcc -w -m32 t1.c core.c alloc_dealloc.c \
   operations/mkdir_creat.c \
   operations/pwd.c \
   operations/chmod.c \
+  operations/touch.c \
+  operations/quit.c \
+  core/get_put_block.c \
+  core/getino.c \
+  core/iget.c \
+  core/iput.c \
+  core/search.c \
   -o filesystem -lm
 if [ -f "filesystem" ]
 then

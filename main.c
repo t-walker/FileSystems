@@ -32,7 +32,7 @@ void init()
         MINODE *mip;
         PROC *p;
 
-        printf("iget() -- initalized variables\n");
+        printf("init() -- initalized variables\n");
 
         // 1) 2 PROCs, P0 with uid=0, P1 with uid=1, all PROC.cwd = 0
         for (i = 0; i < NPROC; i++) {
@@ -42,12 +42,12 @@ void init()
                 proc[i].status = FREE;
         }
 
-        printf("iget() -- added two empty procs\n");
+        printf("init() -- added two empty procs\n");
 
         running = malloc(sizeof(PROC));
         running = &proc[0];
 
-        printf("iget() -- set running\n");
+        printf("init() -- set running\n");
 
         // 2) MINODE minode[100]; all with refCount = 0
         for (i = 0; i < NMINODE; i++) {
@@ -57,18 +57,18 @@ void init()
                 minode[i].mptr = 0;
         }
 
-        printf("iget() -- created empty MINODES\n");
+        printf("init() -- created empty MINODES\n");
 
         // 3) MINODE *root = 0;
         root = 0;
-        printf("iget() -- set the root to 0\n");
+        printf("init() -- set the root to 0\n");
 
 }
 
 int main(int argc, char *argv[], char *env[])
 {
         char *pathname = "/";
-	deviceName = "disk"; //TODO:should get from user
+        deviceName = "disk"; //TODO:should get from user
         printf("main() ------\n");
 
         printf("main() -- calling init()\n");
@@ -86,18 +86,5 @@ int main(int argc, char *argv[], char *env[])
 
         // ask for a command string (stat pathname)
         //stat(pathname, &mystat); // struct stat mystat; print mystat information
-        return 0;
-}
-
-int quit()
-{
-        int i = 0;
-
-        for (i = 0; i < ninodes; i++)
-        {
-                minode[i].refCount = 0;
-                iput(&minode[i]);
-        }
-
         return 0;
 }
