@@ -19,13 +19,6 @@ void getCommands(char* currentPath)
                 fgets(command, 250, stdin);
                 argv = parse(strip(command), " ", strs);
 
-                // //TODO: replace this with calling the commands
-                // while(i<100 && strs[i]!=NULL)
-                // {
-                //         printf("%s ", strs[i]);
-                //         i++;
-                // }
-
                 if(strcmp(strs[0], "ls")==0)
                 {
                         ls(strs[1]);
