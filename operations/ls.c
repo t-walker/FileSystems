@@ -4,8 +4,10 @@
 void ls (char *pathname)
 {
         //printf("ls() -----\n");
-        int ino = running->cwd->ino, dev = running->cwd->dev;
-        MINODE *mip = iget(dev, running->cwd->ino);
+        int ino = running->cwd->ino;
+        int dev = running->cwd->dev;
+
+        MINODE *mip;
         //printf("ls() -- running->cwd->ino: %d\n", running->cwd->ino);
         //printf("ls() -- mip = running->cwd\n");
 
@@ -34,17 +36,21 @@ void ls (char *pathname)
 
                 if (S_ISDIR(mip->INODE.i_mode))
                 {
-                  //printf("IS directory\n");
-                  printDir(mip->INODE, dev);
+                        //printf("IS directory\n");
+                        printDir(mip->INODE, dev);
                 }
                 else
                 {
-                  printf("IS NOT A DIRECTORY");
+                        printf("IS NOT A DIRECTORY");
                 }
+
+                iput(mip);
 
         }
         else
         {
+                mip = iget(dev, running->cwd->ino);
                 printDir(mip->INODE, dev);
         }
+
 }

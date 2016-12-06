@@ -55,19 +55,23 @@ int parse(const char* str,const char* delim, char *strs[100])
 
 int get_block(int fd, int blk, char buf[])
 {
+        printf("put_block() -- fd: %d\n", fd);
+        printf("put_block() -- blk: %d\n", blk);
         lseek(fd, (long)blk*BLKSIZE, 0);
         read(fd, buf, BLKSIZE);
 }
 
 int put_block(int fd, int blk, char buf[])
 {
+        printf("put_block() -- fd: %d\n", fd);
+        printf("put_block() -- blk: %d\n", blk);
+
         lseek(fd, (long)blk*BLKSIZE, 0);
         write(fd, buf, BLKSIZE);
 }
 
 void printDir(INODE ptr, int dev)
 {
-
         if((ptr.i_mode & 0x4000) == 0x4000)
         {
                 time_t t;
@@ -80,7 +84,7 @@ void printDir(INODE ptr, int dev)
 
                 while(cp < buf + 1024) {
                         t = ptr.i_mtime;
-                        printf("%4d  %4d  %4d  %15s \t %20s", dp->inode, dp->rec_len, dp->name_len, dp->name, ctime(&t)); //prints out traversal
+                        printf("%6o %4d  %4d  %4d  %15s \t %20s", ptr.i_mode, dp->inode, dp->rec_len, dp->name_len, dp->name, ctime(&t)); //prints out traversal
                         cp += dp->rec_len;
                         dp = (DIR *) cp; //shut up
                 }

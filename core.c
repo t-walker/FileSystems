@@ -4,17 +4,17 @@
 // gets the inode number given a path and an minode.
 int getino(char *path, int *dev)
 {
-        //printf("getino() ------\n");
+        printf("getino() ------\n");
 
         int i, inum = 0, bnum, offset;
         int num_paths;
         char x;
-        //printf("getino() -- initalized variables.\n");
+        printf("getino() -- initalized variables.\n");
 
         MINODE *mip;
         INODE *ip = (INODE*) malloc(sizeof(INODE));
 
-        //printf("getino() -- created a temporary MINODE.\n");
+        printf("getino() -- created a temporary MINODE.\n");
 
         char *strs[100];
 
@@ -22,38 +22,38 @@ int getino(char *path, int *dev)
         if(path[0] == '/') {
                 dev = root->dev;
                 inum = root->ino;
-                //printf("getino() -- the path begins at root.\n");
+                printf("getino() -- the path begins at root.\n");
         }
         else {
                 dev = running->cwd->dev;
                 inum = running->cwd->ino;
-                //printf("getino() -- the path is relative.\n");
+                printf("getino() -- the path is relative.\n");
         }
 
 
-        //printf("getino() -- parsing the path.\n");
-        //printf("getino() -- path: %s.\n", path);
+        printf("getino() -- parsing the path.\n");
+        printf("getino() -- path: %s.\n", path);
 
         num_paths = parse(path, "/", strs);
 
         for (i = 0; i < num_paths; i++)
         {
                 mip = iget(dev, inum);
-                //printf("path %s\n", strs[i]);
+                printf("path %s\n", strs[i]);
                 inum = search(mip, strs[i]);
-                //printf("getino() -- inum: %d.\n", inum);
+                printf("getino() -- inum: %d.\n", inum);
 
                 if(inum == 0)
                 {
-                        //printf("File not found\n");
+                        printf("File not found\n");
                         return 0;
                 }
 
-                //printf("getino() -- setting mp to buf + offset.\n");
+                printf("getino() -- setting mp to buf + offset.\n");
 
                 iput(mip);
         }
-        //printf("getino() -- returning inum\n");
+        printf("getino() -- returning inum\n");
 
         return inum;
 }
@@ -62,10 +62,10 @@ int getino(char *path, int *dev)
 // Retrieves an inode given a dev and an inode.
 MINODE *iget(int dev, int ino)
 {
-        //printf("iget() ------\n");
+        printf("iget() ------\n");
         MINODE *mip = malloc(sizeof(MINODE));
         int i, blk_num, offset;
-        //printf("iget() -- allocated *mip.\n");
+        printf("iget() -- allocated *mip.\n");
 
         //Loop through all of the minodes to see if the one we want is in memory
         for (i = 0; i < NMINODE; i++) {
@@ -76,22 +76,22 @@ MINODE *iget(int dev, int ino)
                 }
         }
 
-        //printf("iget() -- found the MINODE.\n");
+        printf("iget() -- found the MINODE.\n");
 
         //Use mailman's to get the block location
         blk_num = ((ino - 1)/8) + inode_start;
         offset = (ino - 1) % 8;
-        //printf("iget() -- mailman's algorithm:\n");
-        //printf("iget() -- blk_num %d.\n", blk_num);
-        //printf("iget() -- offset %d.\n", offset);
+        printf("iget() -- mailman's algorithm:\n");
+        printf("iget() -- blk_num %d.\n", blk_num);
+        printf("iget() -- offset %d.\n", offset);
 
         //Get the block
         get_block(dev, blk_num, buf);
-        //printf("iget() -- got the block for the blk_num.\n");
+        printf("iget() -- got the block for the blk_num.\n");
 
         ip = (INODE *)buf + offset;
 
-        //printf("iget() -- got the INODE\n");
+        printf("iget() -- got the INODE\n");
 
 
         //Loop through all of the minodes until we find one that is empty
@@ -111,8 +111,8 @@ MINODE *iget(int dev, int ino)
                         minode[i].ino = ino;
                         minode[i].refCount = 1;
 
-                        //printf("iget() -- Empty MINODE found.\n");
-                        //printf("iget() -- Returning MINODE.\n");
+                        printf("iget() -- Empty MINODE found.\n");
+                        printf("iget() -- Returning MINODE.\n");
 
                         //Return the index of the inode
                         return &minode[i];
@@ -124,42 +124,45 @@ MINODE *iget(int dev, int ino)
 // Puts an minode itno the core.
 void iput(MINODE *mip)
 {
-        //printf("iput() ------\n");
+
+        char buffer[BLOCK_SIZE];
+        int block_number;
+        int la_number;
+        int inoBlock;
+
+        printf("iput() ------\n");
 
         int blk_num, offset;
         mip->refCount -= 1;
-        //printf("iput() -- Decrementing the refCount of the MINODE.\n");
+        printf("iput() -- Decrementing the refCount of the MINODE.\n");
 
         if (mip->refCount == 0)
         {
-                //printf("iput() -- MINODE refCount is 0.\n");
+                get_block(mip->dev, 2, buf);
+                gp = (GD *)buffer;
+                inoBlock = gp->bg_inode_table;
 
-                blk_num = ((mip->ino - 1)/8) + inode_start;
-                offset = (mip->ino-1) % 8;
-                //printf("iput() -- blk_num: %d.\n", blk_num);
-                //printf("iput() -- offset: %d.\n", offset);
+                block_number = (mip->ino - 1) / 8 + inoBlock;
+                la_number = (mip->ino - 1) % 8;
 
-                get_block(mip->dev, blk_num, buf);
-                //printf("iput() -- got the block.\n");
+                get_block(mip->dev, block_number, buffer);
+                ip = (INODE *) buf + la_number;
 
-                ip = (INODE *)buf + offset;
-                memcpy(ip, &(mip->INODE), sizeof(INODE));
-                //printf("iput() -- copied the block to memory.\n");
-
-                put_block(dev, blk_num, buf);
-                //printf("iput() -- put the block\n");
+                *ip = mip->INODE;
+                //put_block(mip->dev, block_number, buffer);
         }
         else
         {
-          printf("iput() -- refCount not zero\n");
+                printf("iput() -- refCount not zero\n");
         }
+
 }
 
 // SEARCH
 // Searches for a path within an inode.
 int search(MINODE *mip, char *pathname)
 {
-        //printf("search() ------\n");
+        printf("search() ------\n");
 
         int i, j;
         char *cp, *tmp;
@@ -169,31 +172,31 @@ int search(MINODE *mip, char *pathname)
 
         for(i = 0; i < 12; i++)
         {
-                //printf("search() -- loop: %d.\n", i);
-                //printf("search() -- minode dev: %d ino: %d\n", mip->dev, mip->ino);
+                printf("search() -- loop: %d.\n", i);
+                printf("search() -- minode dev: %d ino: %d\n", mip->dev, mip->ino);
                 dev = mip->dev;
 
                 if(mip->INODE.i_block[i])
                 {
-                        //printf("search() -- mip->INODE.i_block[%d] isn't null\n", i);
+                        printf("search() -- mip->INODE.i_block[%d] isn't null\n", i);
                         get_block(dev, mip->INODE.i_block[i], buf);
                         dp = (DIR *)buf;
                         cp = buf;
 
                         while(cp < buf + 1024)
                         {
-                                //printf("search() -- %s %d vs %s %d\n", dp->name, strlen(dp->name), pathname, strlen(pathname));
+                                printf("search() -- %s %d vs %s %d\n", dp->name, strlen(dp->name), pathname, strlen(pathname));
                                 j=0;
                                 while(j < dp->name_len)
                                 {
-                                  dir[j] = dp->name[j];
-                                  j++;
+                                        dir[j] = dp->name[j];
+                                        j++;
                                 }
                                 dir[j] = '\0';
 
                                 if (strcmp(dir, pathname) == 0)
                                 {
-                                        //printf("search() -- found directory: %s\n", dp->name);
+                                        printf("search() -- found directory: %s\n", dp->name);
                                         return dp->inode;
                                 }
 

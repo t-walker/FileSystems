@@ -59,7 +59,7 @@ void ch_mod(char *args[], int argv)
 
     mip->INODE.i_mode = permission_o;
 
-    printf("chmod() -- permission: %3o\n", permission_o);
+    printf("chmod() -- permission: %3o\n", mip->INODE.i_mode);
 
     iput(mip);
   }
