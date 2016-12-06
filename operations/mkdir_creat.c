@@ -252,6 +252,9 @@ void mk_dir (char *pathname)
 	  dev = running->cwd->dev;
 	}
 
+  dirname[0] = '\0';
+  basename[0] = '\0';
+  
 	// devide pathname into base and dirname
   strcpy(dirname, dname(pathname));
 	strcpy(basename, bname(pathname));
