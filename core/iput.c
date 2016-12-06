@@ -10,26 +10,26 @@ void iput(MINODE *mip)
         int inoBlock;
         GD *gp;
 
-        printf("iput() ------\n");
+        //printf("iput() ------\n");
         mip->refCount--;
-        printf("iput() -- refCount is now: %d\n", mip->refCount);
+        //printf("iput() -- refCount is now: %d\n", mip->refCount);
 
         //printf("iput() -- Decrementing the refCount of the MINODE.\n");
         if (mip->dirty == 1 && mip->refCount == 0)
         {
-                printf("iput() -- mip->dev: %d.\n", mip->dev);
+                //printf("iput() -- mip->dev: %d.\n", mip->dev);
 
                 get_block(mip->dev, 2, buffer);
                 gp = (GD *)buffer;
                 inoBlock = gp->bg_inode_table;
-                printf("iput() -- inoBlock: %d.\n", inoBlock);
-                printf("iput() -- block_number = (%d - 1) / 8 + %d = %d.\n", mip->ino, inoBlock, ((mip->ino - 1) / 8 + inoBlock));
+                //printf("iput() -- inoBlock: %d.\n", inoBlock);
+                //printf("iput() -- block_number = (%d - 1) / 8 + %d = %d.\n", mip->ino, inoBlock, ((mip->ino - 1) / 8 + inoBlock));
 
                 block_number = (mip->ino - 1) / 8 + inoBlock;
                 offset = (mip->ino - 1) % 8;
-                printf("iput() -- block_number: %d.\n", block_number);
-                printf("iput() -- la_number: %d.\n", offset);
-                printf("iput() -- mip->dev: %d.\n", mip->dev);
+                //printf("iput() -- block_number: %d.\n", block_number);
+                //printf("iput() -- la_number: %d.\n", offset);
+                //printf("iput() -- mip->dev: %d.\n", mip->dev);
 
                 get_block(mip->dev, block_number, buffer);
                 ip = (INODE *) buffer + offset;
