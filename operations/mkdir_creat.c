@@ -12,8 +12,12 @@ kmkdir(MINODE *pmip,const char *basename, int pinum)
        char mybuf[BLKSIZE];
        DIR* dp;
        char* cp;
+<<<<<<< HEAD
        char* bname = basename;
 printf("kmkdir() --- basename1 = %s\n", basename);
+=======
+
+>>>>>>> master
        //initialize mip->INODE as a DIR INODE
        mip->INODE.i_mode = 0x41ED; //mode is dir with permissions
        mip->INODE.i_uid = running->uid;
@@ -26,6 +30,7 @@ printf("kmkdir() --- basename2 = %s\n", basename);
 printf("kmkdir() --- basename3 = %s\n", basename);
        mip->INODE.i_blocks = 2;
        mip->INODE.i_block[0] = blk;
+<<<<<<< HEAD
        for (i=1; i < 15; i++){
 	      mip->INODE.i_block[i] = 0;
       }
@@ -33,6 +38,14 @@ printf("kmkdir() --- basename4 = %s\n", basename);
        mip->dirty = 1;
        iput(mip); //write INODE back to disk
 printf("kmkdir() --- basename5 = %s\n", basename);
+=======
+       for (i=1; i < 15; i++)
+	 mip->INODE.i_block[i] = 0;
+
+       mip->dirty = 1;
+       iput(mip); //write INODE back to disk
+
+>>>>>>> master
        //make data block
        get_block(pmip->dev, blk, mybuf);
        dp = (DIR*)mybuf;
@@ -53,9 +66,13 @@ printf("kmkdir() --- basename8 = %s\n", basename);
        strcpy(dp->name, "..");
        dp->rec_len= BLKSIZE - 12;
 
+<<<<<<< HEAD
        put_block(dev, blk, mybuf);
 
        printf("kmkdir() --- bname = %s\n", bname);
+=======
+       put_block(dev, blk, buf);
+>>>>>>> master
        insert_dir_entry(pmip, inum, basename);
        printf("kmkdir() ------End\n");
 }
@@ -155,8 +172,12 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
   //dp->file_type?
   strcpy(dp->name, basename);
 
+<<<<<<< HEAD
   put_block(pmip->dev, blk, mybuf);
   printf("insert_dir_entry() --- END\n");
+=======
+  put_block(pmip->dev, blk, buf);
+>>>>>>> master
   return;
 }
 
@@ -248,7 +269,10 @@ void mk_dir (char *pathname)
 	char *strs[100], *dirname= "", *basename="";
 	int pinum = 0, inum = 0;
 	MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
+<<<<<<< HEAD
 	MINODE *mip;
+=======
+>>>>>>> master
 
 	//set up dev
 	if(pathname[0] == '/'){

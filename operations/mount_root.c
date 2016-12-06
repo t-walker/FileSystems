@@ -61,8 +61,13 @@ void mount_root(char* deviceName) // Mount root file system, establish / and CWD
         root->mptr->dev = dev;
         root->mptr->busy = 1;
         root->mptr->mounted_inode = root;
+<<<<<<< HEAD
 	//imap = gp->bg_inode_bitmap;
 	//bmap = gp->bg_block_bitmap;
+=======
+        imap = gp->bg_inode_bitmap;
+        bmap = gp->bg_block_bitmap;
+>>>>>>> master
         printf("mount_root() -- set all of the values for root.\n");
 
         strcpy(root->mptr->name,"/");
@@ -74,6 +79,10 @@ void mount_root(char* deviceName) // Mount root file system, establish / and CWD
         // Let CWD of both P0 and P1 point at the root minode (refCount = 3)
         proc[0].cwd = iget(dev, 2);
         proc[1].cwd = iget(dev, 2);
+
+        iput(root);
+        iput(proc[0].cwd);
+        iput(proc[1].cwd);
         printf("mount_root() -- set CWD of P0 and P1.\n");
 
         printf("mount_root() finished\n\n");

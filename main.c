@@ -68,7 +68,7 @@ void init()
 int main(int argc, char *argv[], char *env[])
 {
         char *pathname = "/";
-	deviceName = "disk"; //TODO:should get from user
+        deviceName = "disk"; //TODO:should get from user
         printf("main() ------\n");
 
         printf("main() -- calling init()\n");
@@ -89,6 +89,7 @@ int main(int argc, char *argv[], char *env[])
 	quit();
         return 0;
 }
+<<<<<<< HEAD:t1.c
 
 int quit()
 {
@@ -103,3 +104,5 @@ int quit()
 
         return 0;
 }
+=======
+>>>>>>> master:main.c

@@ -3,7 +3,12 @@
 
 /* INCLUDES */
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <math.h>
+#include <time.h>
+
 #include "type.h"
+#include "core.h"
 
 /* EXTERNS */
 extern MINODE minode[NMINODE];
@@ -33,20 +38,23 @@ u32 balloc(int dev);
 
 /* FILESYTEM OPERATIONS */
 void getCommands(char* currentPath);
+void quit();
+
 /* LEVEL 1 */
 void mount_root();
 void mk_dir(char *pathname);
 // void rmdir(char *pathname);
 void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
-// void pwd();
+void pwd();
 // void creat();
 // void link();
 // void unlink();
 // void symlink();
 // void stat();
-// void chmod();
-// void touch();
+void ch_mod(char *args[], int argv);
+void touch(char *argv[], int argc);
+void quit();
 
 /* LEVEL 2 */
 // void open();
