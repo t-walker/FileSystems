@@ -21,18 +21,18 @@
 
 void rm_dir(char *pathname)
 {
-        printf("mkdir() -----\n");
-        int i=0, dev = 0;
-        char *strs[100], dirname[256], basename[100];
-        int pinum = 0, inum = 0;
-        MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
-        MINODE *mip;
+    printf("rmdir() -----\n");
+    int i=0, dev = 0;
+    char *strs[100], dirname[256], basename[100];
+    int pinum = 0, inum = 0;
+    MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
+    MINODE *mip;
 
-        //trying to remove the root
-        if(pathname[0] == '/'&& strlen(pathname) == 1) {
-                printf("cannot remove root\n");
-                return;
-        }
+    //trying to remove the root
+    if(pathname[0] == '/'&& strlen(pathname) == 1){
+      printf("cannot remove root\n");
+      return;
+    }
 
         if(pathname[0] == '/')
         {
@@ -106,38 +106,61 @@ void rm_dir(char *pathname)
         }
         idealloc(mip->dev, mip->ino);
         iput(mip);
+        
+    //is it empty?
+    if(mip->INODE.i_links_count == 2)
+    {
+      //check subsequent dirs
+      if(!isEmpty(mip, mip->dev))
+      {
+        printf("Dir not empty\n");
+        iput(mip);
+        return;
+      }
+    }
 
-        //fix the parent inode in memory
-        strcpy(dirname, dname(pathname));
-        strcpy(basename, bname(pathname));
-        printf("mkdir() ---dirname: %s\n", dirname);
-        printf("mkdir() --basename: %s\n", basename);
+    //free up the data
+    for (i = 0; i < 12; i++)
+    {
+      if (mip->INODE.i_block[i] != 0)
+      {
+        bdealloc(mip->dev, mip->INODE.i_block[i]);
+      }
+    }
+    idealloc(mip->dev, mip->ino);
+    iput(mip);
 
-        //dirname must exist and is a DIR;
-        if(strcmp(dirname,".")==0) {
-                pinum = running->cwd->ino;
-        }
-        else if(strcmp(dirname,"/") == 0) {
-                pinum = root->ino;
-        }
-        else{
-                pinum = getino(dirname, dev);
-        }
+    //fix the parent inode in memory
+    strcpy(dirname, dname(pathname));
+  	strcpy(basename, bname(pathname));
+  	printf("rmdir() ---dirname: %s\n", dirname);
+  	printf("rmdir() --basename: %s\n", basename);
 
-        if(pinum ==0) {
-                printf("&s does not exist\n", dirname);
-                return;
-        }
-        pmip = iget(dev, pinum);
+  	//dirname must exist and is a DIR;
+  	if(strcmp(dirname,".")==0) {
+  	  pinum = running->cwd->ino;
+  	}
+  	else if(strcmp(dirname,"/") == 0){
+  	  pinum = root->ino;
+  	}
+  	else{
+  	  pinum = getino(dirname, dev);
+  	}
 
-        delete_dir_entry(pmip, basename);
+  	if(pinum ==0){
+  	  printf("&s does not exist\n", dirname);
+  	  return;
+  	}
+  	pmip = iget(dev, pinum);
 
-        //pmip->refCount --; //tenative
-        pmip->INODE.i_links_count--;
-        pmip->INODE.i_atime = pmip->INODE.i_mtime = time(0L);
-        pmip->dirty = 1;
+    delete_dir_entry(pmip, basename);
 
-        iput(pmip);
+    //pmip->refCount --; //tenative
+    pmip->INODE.i_links_count--;
+    pmip->INODE.i_atime = pmip->INODE.i_mtime = time(0L);
+    pmip->dirty = 1;
+
+    iput(pmip);
 }
 
 //returns 0 for false 1 for true
@@ -275,4 +298,99 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                         dp = (DIR *) cp;
                 }
         }
+}
+
+void my_rm(char *pathname)
+{
+  printf("rm() -----\n");
+  int i=0, dev = 0;
+  char *strs[100], dirname[256], basename[100];
+  int pinum = 0, inum = 0;
+  MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
+  MINODE *mip;
+
+  //trying to remove the root
+  if(pathname[0] == '/'&& strlen(pathname) == 1){
+    printf("cannot remove root\n");
+    return;
+  }
+
+  if(pathname[0] == '/')
+  {
+    dev = root->dev;
+  }
+  else
+  {
+    dev = running->cwd->dev;
+  }
+
+  //get path inum
+  inum = getino(pathname, dev);
+  if(inum == 0)
+  {
+    printf("%s is an invalid path\n", pathname);
+    return;
+  }
+
+  mip = iget(dev, inum);
+
+  //check who owns it
+  if(mip->INODE.i_uid != running->uid && running->uid != 0)
+  {
+    printf("uid doesn't match\n");
+    iput(mip);
+    return;
+  }
+
+  //is it a r?
+  if(!(S_ISREG(mip->INODE.i_mode)))
+  {
+    printf("%s is not a file\n", pathname);
+    iput(mip);
+    return;
+  }
+
+  //check if it is in use
+  if(mip->refCount > 1)
+  {
+    printf("Still in use\n");
+    iput(mip);
+    return;
+  }
+
+////////////////////////////may need to check links count when we imple link/unlink
+
+  //deallocate the inode
+  idealloc(mip->dev, mip->ino);
+  iput(mip);
+
+  //fix the parent inode in memory
+  strcpy(dirname, dname(pathname));
+  strcpy(basename, bname(pathname));
+  printf("rm() ---dirname: %s\n", dirname);
+  printf("rm() --basename: %s\n", basename);
+
+  //dirname must exist and is a DIR;
+  if(strcmp(dirname,".")==0) {
+    pinum = running->cwd->ino;
+  }
+  else if(strcmp(dirname,"/") == 0){
+    pinum = root->ino;
+  }
+  else{
+    pinum = getino(dirname, dev);
+  }
+
+  if(pinum ==0){
+    printf("&s does not exist\n", dirname);
+    return;
+  }
+  pmip = iget(dev, pinum);
+
+  delete_dir_entry(pmip, basename);
+
+  pmip->INODE.i_atime = pmip->INODE.i_mtime = time(0L);
+  pmip->dirty = 1;
+
+  iput(pmip);
 }

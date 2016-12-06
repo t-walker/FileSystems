@@ -77,6 +77,10 @@ void getCommands(char* currentPath)
                 {
                         my_creat(strs[1]);
                 }
+                else if(strcmp(strs[0], "rm") == 0)
+                {
+                  my_rm(strs[1]);
+                }
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
