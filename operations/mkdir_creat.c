@@ -121,7 +121,7 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
                         dp = (DIR*) cp;
                 }
                 //now dp is at the end;
-                ideal_len = 4*((8 + dp->name_len + 3)/4);
+                ideal_len = 4*((8 + dp->name_len + 4)/4);
                 remain = dp->rec_len - ideal_len;
                 if(remain >= need_len) {
                         dp->rec_len = ideal_len;
