@@ -7,34 +7,34 @@ MINODE *iget(int dev, int ino)
         printf("iget() ------\n");
         MINODE *mip = malloc(sizeof(MINODE));
         int i, blk_num, offset;
-        printf("iget() -- allocated *mip.\n");
+        //printf("iget() -- allocated *mip.\n");
 
         //Loop through all of the minodes to see if the one we want is in memory
         for (i = 0; i < NMINODE; i++) {
                 if (minode[i].ino == ino) // Is this the inode we're looking for?
                 {
                         minode[i].refCount++; // Add the reference of it.
-                        printf("iget() -- refCount is now: %d\n", minode[i].refCount);
+                        printf("iget() -- refCount for %d is now: %d\n", i, minode[i].refCount);
                         return &minode[i];
                 }
         }
 
-        printf("iget() -- found the MINODE.\n");
+        //printf("iget() -- found the MINODE.\n");
 
         //Use mailman's to get the block location
         blk_num = ((ino - 1)/8) + inode_start;
         offset = (ino - 1) % 8;
-        printf("iget() -- mailman's algorithm:\n");
-        printf("iget() -- blk_num %d.\n", blk_num);
-        printf("iget() -- offset %d.\n", offset);
+        //printf("iget() -- mailman's algorithm:\n");
+        //printf("iget() -- blk_num %d.\n", blk_num);
+        //printf("iget() -- offset %d.\n", offset);
 
         //Get the block
         get_block(dev, blk_num, buf);
-        printf("iget() -- got the block for the blk_num.\n");
+        //printf("iget() -- got the block for the blk_num.\n");
 
         ip = (INODE *)buf + offset;
 
-        printf("iget() -- got the INODE\n");
+        //printf("iget() -- got the INODE\n");
 
 
         //Loop through all of the minodes until we find one that is empty
@@ -54,8 +54,8 @@ MINODE *iget(int dev, int ino)
                         minode[i].ino = ino;
                         minode[i].refCount = 1;
 
-                        printf("iget() -- Empty MINODE found.\n");
-                        printf("iget() -- Returning MINODE.\n");
+                        //printf("iget() -- Empty MINODE found.\n");
+                        //printf("iget() -- Returning MINODE.\n");
 
                         //Return the index of the inode
                         return &minode[i];

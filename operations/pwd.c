@@ -66,11 +66,15 @@ int getName(int local_ino, int local_dev, int pointer_ino)
                                 dp->name[dp->name_len] = 0;
                                 printf("/%s", dp->name);
                                 c = dp->name[dp->name_len];
+                                iput(mip);
+
                                 return 1;
                         }
                         cp += dp->rec_len;
                         dp = (DIR *) cp;
                 }
         }
+
+        iput(mip);
         return 0;
 }

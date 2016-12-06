@@ -41,11 +41,12 @@ void cd(char *pathname)
                         printf("cd() -- cannot cd into a file\n");
                 }
 
-                iput(mip);
         }
         else
         {
                 printf("cd() -- setting to drive root");
                 running->cwd = root;
         }
+        
+        iput(mip);
 }

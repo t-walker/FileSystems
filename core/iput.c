@@ -4,7 +4,6 @@
 // Puts an minode itno the core.
 void iput(MINODE *mip)
 {
-
         char buffer[BLOCK_SIZE];
         int block_number;
         int la_number;
@@ -14,16 +13,19 @@ void iput(MINODE *mip)
 
         int blk_num, offset;
         mip->refCount--;
-        printf("iget() -- refCount is now: %d\n", mip->refCount);
+        printf("iput() -- refCount is now: %d\n", mip->refCount);
 
-        printf("iput() -- Decrementing the refCount of the MINODE.\n");
+        //printf("iput() -- Decrementing the refCount of the MINODE.\n");
 
         if (mip->refCount == 0)
         {
-                get_block(mip->dev, 2, buf);
+                printf("iput() -- mip->dev: %d.\n", mip->dev);
+
+                get_block(mip->dev, 2, buffer);
                 gp = (GD *)buffer;
                 inoBlock = gp->bg_inode_table;
                 printf("iput() -- inoBlock: %d.\n", inoBlock);
+                printf("iput() -- block_number = (%d - 1) / 8 + %d = %d.\n", mip->ino, inoBlock, ((mip->ino - 1) / 8 + inoBlock));
 
                 block_number = (mip->ino - 1) / 8 + inoBlock;
                 la_number = (mip->ino - 1) % 8;
@@ -32,14 +34,14 @@ void iput(MINODE *mip)
                 printf("iput() -- mip->dev: %d.\n", mip->dev);
 
                 get_block(mip->dev, block_number, buffer);
-                ip = (INODE *) buf + la_number;
+                ip = (INODE *) buffer + la_number;
 
                 *ip = mip->INODE;
                 put_block(mip->dev, block_number, buffer);
         }
         else
         {
-                printf("iput() -- refCount not zero\n");
+                //printf("iput() -- refCount not zero\n");
         }
 
 }
