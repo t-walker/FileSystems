@@ -27,11 +27,11 @@ void getCommands(char* currentPath)
                 {
                         if (argc == 2)
                         {
-                          cd(strs[1]);
+                                cd(strs[1]);
                         }
                         else if (argc == 1)
                         {
-                          cd(NULL);
+                                cd(NULL);
                         }
                 }
                 else if(strcmp(strs[0], "pwd")==0)
@@ -44,29 +44,30 @@ void getCommands(char* currentPath)
                 }
                 else if(strcmp(strs[0], "chmod") == 0)
                 {
-                  if (argc == 3)
-                  {
-                    ch_mod(strs, argc);
-                  }
-                  else
-                  {
-                    printf("getCommands() -- Not enough arugments");
-                  }
+                        if (argc == 3)
+                        {
+                                ch_mod(strs, argc);
+                        }
+                        else
+                        {
+                                printf("getCommands() -- Not enough arugments");
+                        }
                 }
                 else if(strcmp(strs[0], "touch") == 0)
                 {
-                  if (argc >= 2)
-                  {
-                    touch(strs, argc);
-                  }
-                  else
-                  {
-                    printf("getCommands() -- Not enough arugments");
-                  }
+                        if (argc >= 2)
+                        {
+                                touch(strs, argc);
+                        }
+                        else
+                        {
+                                printf("getCommands() -- Not enough arugments");
+                        }
                 }
-                printf("\n");
-                if(strcmp(strs[0], "quit") == 0)
-                        break;
+                else if(strcmp(strs[0], "quit") == 0)
+                {
+                  quit();
+                }
         }
         printf("getCommands()---finished\n");
 }
