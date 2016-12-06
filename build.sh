@@ -9,7 +9,7 @@ echo "${NC}Removing files."
 rm filesystem
 echo "Filesystem obj removed."
 echo "Running gcc."
-gcc -w -m32 main.c alloc_dealloc.c \
+gcc-4.9 -w -m32 main.c alloc_dealloc.c \
   operations/mount_root.c \
   operations/cd.c \
   operations/ls.c \

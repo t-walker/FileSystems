@@ -73,6 +73,10 @@ void getCommands(char* currentPath)
 		            {
 		                  rm_dir(strs[1]);
 		            }
+                else if(strcmp(strs[0], "creat")==0)
+                {
+                  my_creat(strs[1]);
+                }
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
