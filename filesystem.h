@@ -38,6 +38,8 @@ u32 balloc(int dev);
 
 /* FILESYTEM OPERATIONS */
 void getCommands(char* currentPath);
+void quit();
+
 /* LEVEL 1 */
 void mount_root();
 void mk_dir(char *pathname);
