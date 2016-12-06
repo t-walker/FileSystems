@@ -86,5 +86,6 @@ int main(int argc, char *argv[], char *env[])
 
         // ask for a command string (stat pathname)
         //stat(pathname, &mystat); // struct stat mystat; print mystat information
+	quit();
         return 0;
 }

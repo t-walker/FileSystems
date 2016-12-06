@@ -68,6 +68,15 @@ void getCommands(char* currentPath)
                 {
                   quit();
                 }
+		            else if(strcmp(strs[0], "mkdir")==0)
+		            {
+		                  mk_dir(strs[1]);
+		            }
+
+                printf("\n");
+                if(strcmp(strs[0], "quit") == 0)
+                        break;
+
         }
         printf("getCommands()---finished\n");
 }
