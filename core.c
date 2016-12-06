@@ -149,7 +149,7 @@ void iput(MINODE *mip)
                 ip = (INODE *) buf + la_number;
 
                 *ip = mip->INODE;
-                //put_block(mip->dev, block_number, buffer);
+                put_block(mip->dev, block_number, buffer);
         }
         else
         {
