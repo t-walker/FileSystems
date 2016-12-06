@@ -29,8 +29,8 @@ void touch(char *argv[], int argc)
 
         mip = iget(dev, ino);
 
-        mip->INODE.i_atime = time(NULL);
-        mip->INODE.i_mtime = time(NULL);
+        mip->INODE.i_atime = time(0L);
+        mip->INODE.i_mtime = time(0L);
 
         time_t t;
 

@@ -31,7 +31,6 @@ void cd(char *pathname)
 
                 if (S_ISDIR(mip->INODE.i_mode))
                 {
-                        printDir(mip->INODE, dev);
                         running->cwd = mip;
                         printf("cd() -- changed the directory\n");
                         printf("cd() -- running->cwd->ino: %d\n", running->cwd->ino);
@@ -41,12 +40,12 @@ void cd(char *pathname)
                         printf("cd() -- cannot cd into a file\n");
                 }
 
+                iput(mip);
+
         }
         else
         {
                 printf("cd() -- setting to drive root");
                 running->cwd = root;
         }
-        
-        iput(mip);
 }
