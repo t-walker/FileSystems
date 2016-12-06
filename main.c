@@ -88,16 +88,3 @@ int main(int argc, char *argv[], char *env[])
         //stat(pathname, &mystat); // struct stat mystat; print mystat information
         return 0;
 }
-
-int quit()
-{
-        int i = 0;
-
-        for (i = 0; i < ninodes; i++)
-        {
-                minode[i].refCount = 0;
-                iput(&minode[i]);
-        }
-
-        return 0;
-}
