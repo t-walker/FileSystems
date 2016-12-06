@@ -51,6 +51,7 @@ void ls (char *pathname)
         {
                 mip = iget(dev, running->cwd->ino);
                 printDir(mip->INODE, dev);
+                iput(mip);
         }
 
 }

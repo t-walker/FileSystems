@@ -14,6 +14,7 @@ MINODE *iget(int dev, int ino)
                 if (minode[i].ino == ino) // Is this the inode we're looking for?
                 {
                         minode[i].refCount++; // Add the reference of it.
+                        printf("iget() -- refCount is now: %d\n", minode[i].refCount);
                         return &minode[i];
                 }
         }
