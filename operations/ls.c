@@ -38,7 +38,7 @@ void ls (char *pathname)
                 if (S_ISDIR(mip->INODE.i_mode))
                 {
                         //printf("IS directory\n");
-                        printDir(mip->INODE, dev);
+                        print_child_inodes(mip, dev);
                 }
                 else
                 {
@@ -51,34 +51,107 @@ void ls (char *pathname)
         else
         {
                 mip = iget(dev, running->cwd->ino);
-                printDir(mip->INODE, dev);
+                print_child_inodes(mip, dev);
                 iput(mip);
         }
 
 }
 
-void printDir(INODE ptr, int dev)
+void print_child_inodes(MINODE *mip, int dev)
 {
-        if((ptr.i_mode & 0x4000) == 0x4000)
-        {
-                time_t t;
-                //printf("printDir()\n");
-                char buf[1024];
-                char *cp;
-                get_block(dev, ptr.i_block[0],buf);
-                dp = (DIR *)buf;
-                cp = buf;
+        int i = 0;
+        char data[BLOCK_SIZE];
+        char *cp = '\0';
+        DIR *dp;
+        MINODE *tmp_mip;
 
-                while(cp < buf + 1024) {
-                        t = ptr.i_mtime;
-                        printf("%6o %4d  %4d  %4d  %15s \t %20s", ptr.i_mode, dp->inode, dp->rec_len, dp->name_len, dp->name, ctime(&t)); //prints out traversal
-                        cp += dp->rec_len;
-                        dp = (DIR *) cp; //shut up
-                }
-                //printf("finished printDir()\n");
-        }
-        else
+        // Direct Blocks
+        for(i = 0; i < 12; i++)
         {
-                //printf("not a directory!\n");
+                if(mip->INODE.i_block[i])
+                {
+                        get_block(dev, mip->INODE.i_block[i], data);
+                        cp = data;
+                        dp = (DIR *)cp;
+
+                        while(cp < data + BLOCK_SIZE)
+                        {
+                                dp->name[dp->name_len] = '\0';
+
+                                tmp_mip = iget(dev, dp->inode);
+
+                                print_dir_entry(dev, tmp_mip, dp->name);
+
+                                iput(tmp_mip);
+
+                                cp += dp->rec_len;
+                                dp = (DIR *)cp;
+                        }
+                }
+                else
+                {
+
+                }
         }
+
+        // Indirect Blocks
+        if(mip->INODE.i_block[12])
+        {
+
+        }
+
+        // Indirect Blocks
+        if(mip->INODE.i_block[13])
+        {
+
+        }
+}
+
+
+void print_dir_entry(int dev, MINODE *mip, char *entry_name)
+{
+  time_t t;
+  int i = 0;
+
+  char *t1 = "xwrxwrxwr-------";
+  char *t2 = "----------------";
+
+  if(S_ISREG(mip->INODE.i_mode))
+  {
+    printf("-");
+  }
+
+  if(S_ISDIR(mip->INODE.i_mode))
+  {
+    printf("d");
+  }
+
+  if(S_ISLNK(mip->INODE.i_mode))
+  {
+    printf("l");
+  }
+
+  for(i = 0; i < 8; i++)
+  {
+    if(mip->INODE.i_mode & (1 << i))
+    {
+      printf("%c", t1[i]);
+    }
+    else
+    {
+      printf("%c", t2[i]);
+    }
+  }
+
+  printf("%5d ", mip->INODE.i_gid);
+  printf("%5d ", mip->INODE.i_uid);
+  printf("%10d ", mip->INODE.i_size);
+
+  t = mip->INODE.i_mtime;
+
+  printf("%10s\t ", entry_name);
+  printf("%s", ctime(&t));
+
+
+
 }

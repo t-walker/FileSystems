@@ -4,7 +4,7 @@
 // Retrieves an inode given a dev and an inode.
 MINODE *iget(int dev, int ino)
 {
-        printf("iget() ------\n");
+        //printf("iget() ------\n");
         int i, blk_num, offset, beginblk;
         char mybuf[BLKSIZE];
         GD *gp;
@@ -15,7 +15,7 @@ MINODE *iget(int dev, int ino)
                 if (minode[i].ino == ino) // Is this the inode we're looking for?
                 {
                         minode[i].refCount++; // Add the reference of it.
-                        printf("iget() -- refCount for %d is now: %d\n", i, minode[i].refCount);
+                        //printf("iget() -- refCount for %d is now: %d\n", i, minode[i].refCount);
                         return &minode[i];
                 }
               /*  if(minode[i].refCount == 0)
