@@ -166,6 +166,7 @@ int search(MINODE *mip, char *pathname)
         int dev;
 
         char dir[200];
+        char mybuf[BLKSIZE];
 
         for(i = 0; i < 12; i++)
         {
@@ -176,11 +177,11 @@ int search(MINODE *mip, char *pathname)
                 if(mip->INODE.i_block[i])
                 {
                         //printf("search() -- mip->INODE.i_block[%d] isn't null\n", i);
-                        get_block(dev, mip->INODE.i_block[i], buf);
-                        dp = (DIR *)buf;
-                        cp = buf;
+                        get_block(dev, mip->INODE.i_block[i], mybuf);
+                        dp = (DIR *)mybuf;
+                        cp = mybuf;
 
-                        while(cp < buf + 1024)
+                        while(cp < mybuf + 1024)
                         {
                                 //printf("search() -- %s %d vs %s %d\n", dp->name, strlen(dp->name), pathname, strlen(pathname));
                                 j=0;

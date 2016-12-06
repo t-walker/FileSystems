@@ -35,7 +35,7 @@ int parse(const char* str,const char* delim, char *strs[100])
         char *token, *temp = strdup(str);
         printf("parse() -- duplicating str into temp\n");
         token = strtok (temp, delim);
-
+	
         printf("parse() -- assigning to strs[]\n");
 
         while (token != NULL)
