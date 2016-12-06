@@ -127,7 +127,6 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
                         dp->rec_len = ideal_len;
                         cp += dp->rec_len;
                         dp = (DIR*)cp;
-
                         dp->inode = inum;
                         dp->rec_len = remain;
                         dp->name_len = strlen(basename);
