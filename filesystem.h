@@ -3,10 +3,12 @@
 
 /* INCLUDES */
 #include <fcntl.h>
-#include "type.h"
 #include <sys/stat.h>
 #include <math.h>
 #include <time.h>
+
+#include "type.h"
+#include "core.h"
 
 /* EXTERNS */
 extern MINODE minode[NMINODE];

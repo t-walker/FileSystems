@@ -7,7 +7,7 @@ void getCommands(char* currentPath)
         char command[250];
         char* strs[100];
         int i = 0;
-        int argv;
+        int argc;
         printf("getCommands()---\n");
 
         while(1)
@@ -17,7 +17,7 @@ void getCommands(char* currentPath)
                 pwd();
                 printf("$ ");
                 fgets(command, 250, stdin);
-                argv = parse(strip(command), " ", strs);
+                argc = parse(strip(command), " ", strs);
 
                 if(strcmp(strs[0], "ls")==0)
                 {
@@ -25,7 +25,14 @@ void getCommands(char* currentPath)
                 }
                 else if(strcmp(strs[0], "cd")==0)
                 {
-                        cd(strs[1]);
+                        if (argc == 2)
+                        {
+                          cd(strs[1]);
+                        }
+                        else if (argc == 1)
+                        {
+                          cd(NULL);
+                        }
                 }
                 else if(strcmp(strs[0], "pwd")==0)
                 {
@@ -33,14 +40,13 @@ void getCommands(char* currentPath)
                 }
                 else if(strcmp(strs[0], "mkdir")==0)
                 {
-                        printf("about to do mkdir %s\n",strs[1]);
                         mk_dir(strs[1]);
                 }
                 else if(strcmp(strs[0], "chmod") == 0)
                 {
-                  if (argv == 3)
+                  if (argc == 3)
                   {
-                    ch_mod(strs, argv);
+                    ch_mod(strs, argc);
                   }
                   else
                   {
@@ -49,9 +55,9 @@ void getCommands(char* currentPath)
                 }
                 else if(strcmp(strs[0], "touch") == 0)
                 {
-                  if (argv >= 2)
+                  if (argc >= 2)
                   {
-                    touch(strs, argv);
+                    touch(strs, argc);
                   }
                   else
                   {
