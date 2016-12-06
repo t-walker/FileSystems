@@ -89,20 +89,3 @@ int main(int argc, char *argv[], char *env[])
 	quit();
         return 0;
 }
-<<<<<<< HEAD:t1.c
-
-int quit()
-{
-        int i = 0;
-
-        for (i = 0; i < NMINODE; i++)
-        {
-	  // minode[i].refCount = 0;
-		if(minode[i].dirty)
-		  iput(&minode[i]);
-        }
-
-        return 0;
-}
-=======
->>>>>>> master:main.c

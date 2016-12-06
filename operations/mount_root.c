@@ -61,13 +61,9 @@ void mount_root(char* deviceName) // Mount root file system, establish / and CWD
         root->mptr->dev = dev;
         root->mptr->busy = 1;
         root->mptr->mounted_inode = root;
-<<<<<<< HEAD
-	//imap = gp->bg_inode_bitmap;
-	//bmap = gp->bg_block_bitmap;
-=======
+        
         imap = gp->bg_inode_bitmap;
         bmap = gp->bg_block_bitmap;
->>>>>>> master
         printf("mount_root() -- set all of the values for root.\n");
 
         strcpy(root->mptr->name,"/");

@@ -33,8 +33,8 @@ void iput(MINODE *mip);
 int search(MINODE *mip, char *pathname);
 
 /* ALLOC AND DEALLOC */
-u32 ialloc(int dev);
-u32 balloc(int dev);
+int ialloc(int dev);
+int balloc(int dev);
 
 /* FILESYTEM OPERATIONS */
 void getCommands(char* currentPath);
