@@ -119,19 +119,9 @@ void getCommands(char* currentPath)
                 {
                         if (argc == 3)
                         {
-                                char buffer[BLOCK_SIZE] = "HELLO SNOWMAN";
 
                                 int fd = my_open(strs[1], atoi(strs[2]));
-                                my_write(fd, buffer, BLOCK_SIZE);
-                                // int count = my_read(fd, buffer, BLOCK_SIZE);
-                                //
-                                // while(count)
-                                // {
-                                //         printf("Buffer: %s\n", buffer);
-                                //         count = my_read(fd, buffer, BLOCK_SIZE);
-                                // }
-
-                                my_close(fd);
+                                printf("getCommands() -- open's fd is: %d", fd);
                         }
                         else
                         {
@@ -144,6 +134,24 @@ void getCommands(char* currentPath)
                         if (argc == 2)
                         {
                                 my_close(atoi(strs[1]));
+                        }
+                        else
+                        {
+                                printf("getCommands() -- Not enough arugments");
+
+                        }
+                }
+                else if(strcmp(strs[0], "read") == 0)
+                {
+                        if (argc == 3)
+                        {
+                          int length = atoi(strs[2]);
+
+                          printf("getCommands() -- length: %d", length);
+
+                          char buffer[BLOCK_SIZE];
+                          my_read(atoi(strs[1]), &buffer, length);
+                          printf("Buffer contains: %s\0", buffer);
                         }
                         else
                         {
