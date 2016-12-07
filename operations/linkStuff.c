@@ -41,12 +41,10 @@
     //setup ips and devs
     if(old_file[0] == '/')
     {
-      //omip = root;
       odev = root->dev;
     }
     else
     {
-      //omip = running->cwd;
       odev = running->cwd->dev;
     }
 
@@ -255,4 +253,162 @@ void my_unlink(char *filename)
   idealloc(mip->dev, mip->ino);
   mip->dirty = 1;
   iput(mip);
+}
+
+/*Algorithm of
+symlink(old_file, new_file)
+{
+1. check: old_file must exist and new_file not yet exist;
+2. create new_file;
+change new_file to SLINK type;
+3. // assume length of old_file name <= 60 chars
+store old_file name in newfile's INODE.i_block[ ] area.
+mark new_file's minode dirty;
+iput(new_file's minode);
+4. mark new_file parent minode dirty;
+put(new_file's parent minode);
+}*/
+
+void my_symlink(char *old_file, char *new_file)
+{
+  int oinum, ninum, odev, ndev;
+  MINODE *omip, *pmip;
+  char dirname[256], basename[100];
+
+  //validate old file path
+  if(old_file[0] == '\0')
+  {
+    printf("No oldfile given\n");
+    return;
+  }
+
+  if(new_file[0] == '\0')
+  {
+    printf("No newfile given\n");
+    return;
+  }
+
+  //setup ips and devs
+  if(old_file[0] == '/')
+  {
+    odev = root->dev;
+  }
+  else
+  {
+    odev = running->cwd->dev;
+  }
+
+  oinum = getino(old_file, odev);
+  if(oinum == 0)
+  {
+    printf("Invalid oldfile\n");
+    return;
+  }
+
+  //get old ip
+  omip = iget(odev, oinum);
+
+  //make sure it's a file or link
+  if(!(S_ISREG(omip->INODE.i_mode)) && !(S_ISLNK(omip->INODE.i_mode)))
+  {
+    printf("Not file or link\n");
+    iput(omip);
+    return;
+  }
+  //done with omip
+  iput(omip);
+
+  //get dirname and basename for new file
+  strcpy(dirname, dname(new_file));
+  strcpy(basename, bname(new_file));
+  printf("link() ---dirname: %s\n", dirname);
+  printf("link() --basename: %s\n", basename);
+
+  //set up new file ip and dev
+  if(dirname[0] == '/')
+  {
+    ndev = root->dev;
+  }
+  else
+  {
+    ndev = running ->cwd->dev;
+  }
+
+  //set up parent
+  if(strcmp(dirname, ".")==0)
+  {
+    ninum = running ->cwd->ino;
+  }
+  else if (strcmp(dirname, "/")==0)
+  {
+    ninum = root-> ino;
+  }
+  else
+  {
+    ninum = getino(dirname, ndev);
+  }
+
+  //make sure new path is valid
+  if(ninum == 0)
+  {
+    printf("Invalid new_file path\n");
+    return;
+  }
+
+  //get the parent ip
+  pmip = iget(ndev, ninum);
+
+  //make sure it's a dir
+  if(!(S_ISDIR(pmip->INODE.i_mode)))
+  {
+    printf("New file path not a directory\n");
+    iput(pmip);
+    return;
+  }
+
+  if(search(pmip, basename) != 0)
+  {
+          printf("%s already exists in %s\n", basename, dirname);
+          iput(pmip);
+          return;
+  }
+
+  symlinkimpl(pmip, basename, new_file);
+  pmip->INODE.i_atime = time(0L);
+  pmip->dirty = 1;
+  iput(pmip);
+}
+
+void symlinkimpl(MINODE *pmip,const char *basename, const char *path)
+{
+        printf("symlinkimpl() ------\n");
+        printf("symlinkimpl() --- basename = %s\n", basename);
+        int i = 0, inum = ialloc(pmip->dev), pathlen = strlen(path);
+        MINODE *mip = iget(pmip->dev, inum); //load INODE into and minode
+        char mybuf[BLKSIZE], *temp = mybuf;
+        //initialize mip->INODE as a DIR INODE
+        mip->INODE.i_mode = 0xA000; //mode is REG with permissions
+        mip->INODE.i_uid = running->uid;
+        mip->INODE.i_gid = running->gid;
+        mip->INODE.i_size = 0; //no allocation needed
+        mip->INODE.i_links_count = 1;
+        //should set up time
+        mip->INODE.i_atime = mip->INODE.i_ctime = mip->INODE.i_mtime = time(0L);
+
+        //copy the path name into the block
+        get_block(mip->dev, mip->INODE.i_block[0], mybuf);
+        i=0;
+        while(temp < mybuf + pathlen)
+        {
+          *temp = path[i];
+          i++;
+          temp++;
+        }
+        put_block(mip->dev, mip->INODE.i_block[0], mybuf);
+
+        mip->dirty = 1;
+        iput(mip); //write INODE back to disk
+
+        insert_dir_entry(pmip, inum, basename);
+        printf("symlinkimpl() ------End\n");
 }
