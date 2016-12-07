@@ -71,8 +71,8 @@
     //get dirname and basename for new file
     strcpy(dirname, dname(new_file));
     strcpy(basename, bname(new_file));
-    printf("creat() ---dirname: %s\n", dirname);
-    printf("creat() --basename: %s\n", basename);
+    printf("link() ---dirname: %s\n", dirname);
+    printf("link() --basename: %s\n", basename);
 
     //set up new file ip and dev
     if(dirname[0] == '/')
@@ -136,6 +136,123 @@
     iput(omip);
     iput(pmip);
 
-
-
   }
+/*********** Algorithm of unlink *************/
+/*unlink(char *filename)
+{
+  1. get filenmae's minode:
+    ino = getino(&dev, filename);
+    mip = iget(dev, ino);
+    check it's a REG or SLINK file
+    2. // remove basename from parent DIR
+      rm_child(pmip, mip->ino, basename);
+      pmip->dirty = 1;
+      iput(pmip);
+    3. // decrement INODE's link_count
+      mip->INODE.i_links_count--;
+      if (mip->INODE.i_links_count > 0)
+      {
+        mip->dirty = 1; iput(mip);
+      }
+    4. if (!SLINK file) // assume:SLINK file has no data block
+      truncate(mip);
+      // deallocate all data blocks
+      deallocate INODE;
+      iput(mip);
+  }*/
+void my_unlink(char *filename)
+{
+  int i, inum, pinum, dev;
+  MINODE *mip, *pmip;
+  char dirname[256], basename[100];
+
+  if(filename[0] == '\0')
+  {
+    printf("Filename does not exist\n");
+    return;
+  }
+
+//get dev
+  if(filename[0] == '/')
+  {
+    dev = root->dev;
+  }
+  else
+  {
+    dev = running->cwd->dev;
+  }
+
+//get ino
+  inum = getino(filename, dev);
+  if(inum == 0)
+  {
+    printf("pathname invalid\n");
+    return;
+  }
+
+//get mip for filename
+  mip = iget(dev, inum);
+
+//check that it's not a dir (ie it is a file or link)
+  if(S_ISDIR(mip->INODE.i_mode))
+  {
+    printf("directory, can't unlink\n");
+    iput(mip);
+    return;
+  }
+
+/////remove base name from parent dir ///
+//split into parent and base
+  strcpy(dirname, dname(filename));
+  strcpy(basename, bname(filename));
+  printf("unlink() ---dirname: %s\n", dirname);
+  printf("unlink() --basename: %s\n", basename);
+
+//Get the parent dir set up
+  if(strcmp(dirname, ".")==0)
+  {
+    pinum = running->cwd->ino;
+  }
+  else if(strcmp(dirname, "/") ==0 /*&& 1 == strlen(dirname)*/)
+  {
+    pinum = root->ino;
+  }
+  else{
+    pinum = getino(dirname, dev);
+  }
+
+//is inum valid
+  if(pinum == 0)
+  {
+    printf("path doesn't exist\n");
+    iput(mip);
+    return;
+  }
+
+//get parent ip
+  pmip = iget(dev, pinum);
+
+//remove base from the directory
+  delete_dir_entry(pmip, basename);
+
+  pmip->INODE.i_atime = time(0L);
+  pmip->INODE.i_mtime = time(0L);
+  pmip->dirty = 1;
+
+  iput(pmip);
+
+  //decrement link count
+    mip->INODE.i_links_count--;
+  //remove the child's data by deallocating
+  if(mip->INODE.i_links_count > 0)
+  {
+    mip->dirty = 1;
+    iput(mip);
+    return;
+  }
+  /*if (!SLINK file) // assume:SLINK file has no data block
+    truncate(mip);*/
+  idealloc(mip->dev, mip->ino);
+  mip->dirty = 1;
+  iput(mip);
+}

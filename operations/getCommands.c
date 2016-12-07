@@ -92,6 +92,10 @@ void getCommands(char* currentPath)
                           my_link(strs[1], strs[2]);
                   }
                 }
+                else if(strcmp(strs[0], "unlink") == 0)
+                {
+                  my_unlink(strs[1]);
+                }
                 else if(strcmp(strs[0], "cat") == 0)
                 {
                   if (argc == 2)

@@ -49,8 +49,8 @@ void ls (char *pathname); // ls [pathname]
 void cd (char *pathname); // cd [pathname]
 void pwd();
 void my_creat(char *pathname);
-// void link();
-// void unlink();
+void my_link(char *old_file, char *new_file);
+void my_unlink(char *filename);
 // void symlink();
 void my_stat(char *pathname);
 void ch_mod(char *args[], int argv);
