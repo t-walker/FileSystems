@@ -38,14 +38,14 @@ mv src dest:
 void my_cp(char *old_file, char *new_file)
 {
   char mybuf[BLKSIZE];
-  char *strs[3] = {"placeholder","777", new_file};
+  //char *strs[3] = {"placeholder","777", new_file};
   //open old for read
   int fd1 = my_open(old_file, O_RDONLY);
 
   //make sure we create or already have new_file in the system
   int fd2 = my_open(new_file, O_CREAT);
   my_close(fd2);
-  ch_mod(strs, 3);
+  //ch_mod(strs, 3);
   //open new for write
   fd2 = my_open(new_file, O_WRONLY);
 
