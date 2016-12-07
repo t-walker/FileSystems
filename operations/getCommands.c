@@ -92,6 +92,13 @@ void getCommands(char* currentPath)
                                 my_link(strs[1], strs[2]);
                         }
                 }
+                else if(strcmp(strs[0], "symlink") == 0)
+                {
+                        if (argc >= 3)
+                        {
+                                my_symlink(strs[1], strs[2]);
+                        }
+                }
                 else if(strcmp(strs[0], "unlink") == 0)
                 {
                         my_unlink(strs[1]);
@@ -119,8 +126,8 @@ void getCommands(char* currentPath)
 
                                 while(count)
                                 {
-                                  printf("Buffer: %s\n", buffer);
-                                  count = my_read(fd, buffer, BLOCK_SIZE);
+                                        printf("Buffer: %s\n", buffer);
+                                        count = my_read(fd, buffer, BLOCK_SIZE);
                                 }
 
                                 close(fd);
