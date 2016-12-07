@@ -92,7 +92,7 @@ void print_child_inodes(MINODE *mip, int dev)
                 }
                 else
                 {
-                  return;
+                        return;
                 }
         }
 
@@ -112,56 +112,56 @@ void print_child_inodes(MINODE *mip, int dev)
 
 void print_dir_entry(int dev, MINODE *mip, char *entry_name)
 {
-  time_t t;
-  int i = 0;
-  char mybuf[BLKSIZE];
+        time_t t;
+        int i = 0;
+        char mybuf[BLKSIZE];
 
-  char *t1 = "xwrxwrxwr-------";
-  char *t2 = "----------------";
+        char *t1 = "xwrxwrxwr-------";
+        char *t2 = "----------------";
 
-  if(S_ISREG(mip->INODE.i_mode))
-  {
-    printf("-");
-  }
+        if(S_ISREG(mip->INODE.i_mode))
+        {
+                printf("-");
+        }
 
-  if(S_ISDIR(mip->INODE.i_mode))
-  {
-    printf("d");
-  }
+        if(S_ISDIR(mip->INODE.i_mode))
+        {
+                printf("d");
+        }
 
-  if(S_ISLNK(mip->INODE.i_mode))
-  {
-    printf("l");
-  }
+        if(S_ISLNK(mip->INODE.i_mode))
+        {
+                printf("l");
+        }
 
-  for(i = 0; i <= 8; i++)
-  {
-    if(mip->INODE.i_mode & (1 << i))
-    {
-      printf("%c", t1[i]);
-    }
-    else
-    {
-      printf("%c", t2[i]);
-    }
-  }
+        for(i = 0; i <= 8; i++)
+        {
+                if(mip->INODE.i_mode & (1 << i))
+                {
+                        printf("%c", t1[i]);
+                }
+                else
+                {
+                        printf("%c", t2[i]);
+                }
+        }
 
-  printf("%5d ", mip->INODE.i_gid);
-  printf("%5d ", mip->INODE.i_uid);
-  printf("%10d ", mip->INODE.i_size);
+        printf("%5d ", mip->INODE.i_gid);
+        printf("%5d ", mip->INODE.i_uid);
+        printf("%10d ", mip->INODE.i_size);
 
-  t = mip->INODE.i_mtime;
+        t = mip->INODE.i_mtime;
 
-  printf("%10s", entry_name);
-  if(S_ISLNK(mip->INODE.i_mode))
-  {
-    printf("-->");
-    get_block(mip->dev, mip->INODE.i_block[0], mybuf);
-    printf("%s",mybuf);
-    put_block(mip->dev, mip->INODE.i_block[0], mybuf);
-  }
-  printf("\t ");
-  printf("%s", ctime(&t));
+        printf("%10s", entry_name);
+        if(S_ISLNK(mip->INODE.i_mode))
+        {
+                printf("-->");
+                get_block(mip->dev, mip->INODE.i_block[0], mybuf);
+                printf("%s",mybuf);
+                put_block(mip->dev, mip->INODE.i_block[0], mybuf);
+        }
+        printf("\t ");
+        printf("%s", ctime(&t));
 
 
 
