@@ -3,6 +3,7 @@
 void touch(char *argv[], int argc)
 {
         int ino;
+        int dev;
         MINODE *mip;
         char *path = argv[1];
 
@@ -19,7 +20,7 @@ void touch(char *argv[], int argc)
                 dev = running->cwd->dev;
         }
 
-        ino = getino(path, &dev);
+        ino = getino(path, dev);
 
         if (ino == 0)
         {
@@ -29,6 +30,7 @@ void touch(char *argv[], int argc)
 
         mip = iget(dev, ino);
 
+        mip->dirty = 1;
         mip->INODE.i_atime = time(0L);
         mip->INODE.i_mtime = time(0L);
 

@@ -14,7 +14,7 @@ void getCommands(char* currentPath)
         {
                 i=0;
                 printf("TMFilesystem:");
-                pwd();
+                //pwd();
                 printf("$ ");
                 fgets(command, 250, stdin);
                 argc = parse(strip(command), " ", strs);

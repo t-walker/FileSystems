@@ -76,9 +76,7 @@ void mount_root(char* deviceName) // Mount root file system, establish / and CWD
         proc[0].cwd = iget(dev, 2);
         proc[1].cwd = iget(dev, 2);
 
-        iput(root);
-        iput(proc[0].cwd);
-        iput(proc[1].cwd);
+
         printf("mount_root() -- set CWD of P0 and P1.\n");
 
         printf("mount_root() finished\n\n");

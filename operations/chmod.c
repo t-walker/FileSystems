@@ -55,7 +55,7 @@ void ch_mod(char *args[], int argv)
                 mip = iget(dev, ino);
 
                 permission_o = mip->INODE.i_mode &= 61440;
-                permission_o |= permission_i;
+                permission_o += permission_i;
 
                 mip->INODE.i_mode = permission_o;
 
@@ -65,6 +65,8 @@ void ch_mod(char *args[], int argv)
         {
 
         }
+
+        mip->dirty = 1;
         iput(mip);
 
 
