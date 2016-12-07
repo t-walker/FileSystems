@@ -97,7 +97,7 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
 
         printf("insert_dir_entry() --- basename = %s\n", basename);
         int baslen = strlen(basename);
-        int need_len = 4*((8 + baslen + 3)/4); //(4 for ino, 2 for rlen, 2 for nlen = 8)+namelen + 3 for 
+        int need_len = 4*((8 + baslen + 3)/4); //(4 for ino, 2 for rlen, 2 for nlen = 8)+namelen + 3 for
         int ideal_len = 0, remain=0;
         int i = 0, j = 0, blk = 0;
         char mybuf[1024], *cp;

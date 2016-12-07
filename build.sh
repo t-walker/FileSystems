@@ -25,6 +25,7 @@ gcc-4.9 -w -m32 main.c alloc_dealloc.c \
   operations/rmdir_rm.c \
   operations/stat.c \
   operations/linkStuff.c \
+  operations/cp_mv.c \
   core/get_put_block.c \
   core/getino.c \
   core/iget.c \
