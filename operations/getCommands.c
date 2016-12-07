@@ -81,6 +81,13 @@ void getCommands(char* currentPath)
                 {
                   my_rm(strs[1]);
                 }
+                else if(strcmp(strs[0], "link") == 0)
+                {
+                  if (argc >= 3)
+                  {
+                          my_link(strs[1], strs[2]);
+                  }
+                }
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
