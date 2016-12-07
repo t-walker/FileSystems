@@ -37,5 +37,7 @@ void iput(MINODE *mip)
                 *ip = mip->INODE;
                 put_block(mip->dev, block_number, buffer);
         }
+        //printf("iput() ----- END\n");
+
 
 }

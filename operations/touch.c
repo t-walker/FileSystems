@@ -3,6 +3,7 @@
 void touch(char *argv[], int argc)
 {
         int ino;
+        int dev;
         MINODE *mip;
         char *path = argv[1];
 
