@@ -119,18 +119,19 @@ void getCommands(char* currentPath)
                 {
                         if (argc == 3)
                         {
-                                char buffer[BLOCK_SIZE];
+                                char buffer[BLOCK_SIZE] = "HELLO SNOWMAN";
 
                                 int fd = my_open(strs[1], atoi(strs[2]));
-                                int count = my_read(fd, buffer, BLOCK_SIZE);
+                                my_write(fd, buffer, BLOCK_SIZE);
+                                // int count = my_read(fd, buffer, BLOCK_SIZE);
+                                //
+                                // while(count)
+                                // {
+                                //         printf("Buffer: %s\n", buffer);
+                                //         count = my_read(fd, buffer, BLOCK_SIZE);
+                                // }
 
-                                while(count)
-                                {
-                                        printf("Buffer: %s\n", buffer);
-                                        count = my_read(fd, buffer, BLOCK_SIZE);
-                                }
-
-                                close(fd);
+                                my_close(fd);
                         }
                         else
                         {

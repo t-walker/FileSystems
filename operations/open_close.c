@@ -152,6 +152,10 @@ int my_close(int fd)
     else
     {
       printf("close() -- Closing file.\n");
+      if(tmp->mptr->dirty)
+      {
+        tmp->mptr->INODE.i_mtime = time(0L);
+      }
       iput(tmp->mptr);
     }
   }
