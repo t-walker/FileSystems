@@ -14,8 +14,6 @@ void cat(char *pathname)
 
         printf("cat() -- Initalized variables\n");
 
-
-
         ino = getino(pathname, dev);
         printf("cat() -- got ino\n");
 
