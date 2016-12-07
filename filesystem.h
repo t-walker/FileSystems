@@ -58,7 +58,7 @@ void touch(char *argv[], int argc);
 void quit();
 
 /* LEVEL 2 */
-// void open();
+int my_open(char *pathname, int flag);
 // void close();
 // void read();
 // void write();

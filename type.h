@@ -24,6 +24,11 @@ DIR   *dp;
 #define NFD           16
 #define NPROC          4
 
+#define O_RDONLY 0
+#define O_WRONLY 1
+#define O_RDWR   2
+#define O_APPEND 3
+
 typedef struct minode {
         INODE INODE;
         int dev, ino;
