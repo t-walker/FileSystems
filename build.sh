@@ -20,6 +20,7 @@ gcc-4.9 -w -m32 main.c alloc_dealloc.c \
   operations/touch.c \
   operations/quit.c \
   operations/cat.c \
+  operations/open_close.c \
   operations/rmdir_rm.c \
   operations/stat.c \
   operations/linkStuff.c \
