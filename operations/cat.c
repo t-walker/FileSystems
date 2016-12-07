@@ -37,7 +37,7 @@ void cat(char *pathname)
 
         int fd = my_open(pathname, O_RDONLY);
 
-        char buffer[50];
+        char buffer[BLOCK_SIZE];
         int count = 1;
 
         while(count)
