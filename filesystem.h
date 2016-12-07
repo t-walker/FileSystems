@@ -59,9 +59,9 @@ void quit();
 
 /* LEVEL 2 */
 int my_open(char *pathname, int flag);
-// void close();
-// void read();
-// void write();
+int my_close(int fd);
+int my_read(int fd, char buffer[], int count);
+int my_write(int fd, char buf[], int count);
 // void lseek();
 void cat(char *pathname);
 void my_cp(char *old_file, char *new_file);
