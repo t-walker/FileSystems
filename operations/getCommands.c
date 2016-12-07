@@ -94,10 +94,10 @@ void getCommands(char* currentPath)
                 }
                 else if(strcmp(strs[0], "symlink") == 0)
                 {
-                  if (argc >= 3)
-                  {
-                          my_symlink(strs[1], strs[2]);
-                  }
+                        if (argc >= 3)
+                        {
+                                my_symlink(strs[1], strs[2]);
+                        }
                 }
                 else if(strcmp(strs[0], "cp") == 0)
                 {
@@ -133,7 +133,19 @@ void getCommands(char* currentPath)
                 {
                         if (argc == 3)
                         {
-                                my_open(strs[1], atoi(strs[2]));
+                                char buffer[BLOCK_SIZE] = "HELLO SNOWMAN";
+
+                                int fd = my_open(strs[1], atoi(strs[2]));
+                                my_write(fd, buffer, BLOCK_SIZE);
+                                // int count = my_read(fd, buffer, BLOCK_SIZE);
+                                //
+                                // while(count)
+                                // {
+                                //         printf("Buffer: %s\n", buffer);
+                                //         count = my_read(fd, buffer, BLOCK_SIZE);
+                                // }
+
+                                my_close(fd);
                         }
                         else
                         {
