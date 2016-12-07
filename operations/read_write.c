@@ -176,6 +176,11 @@ int my_read(int fd, char buffer[], int count)
         int i_blk;
         int start_byte;
 
+        if (avail > count)
+        {
+          avail = count;
+        }
+
         while(count && avail)
         {
                 cp = buffer;
@@ -212,7 +217,7 @@ int my_read(int fd, char buffer[], int count)
                 }
 
                 get_block(mip->dev, blk, read_buffer);
-                printf("read() -- buffer contains: %s", buffer);
+                printf("read() -- buffer contains: %s", read_buffer);
 
                 cr = read_buffer + start_byte;
 
@@ -230,7 +235,7 @@ int my_read(int fd, char buffer[], int count)
                         }
                         else
                         {
-                                read_in = remain;
+                                read_in = count;
                                 printf("read() -- read_in = remain = %d\n", remain);
                         }
 

@@ -173,6 +173,23 @@ void getCommands(char* currentPath)
 
                         }
                 }
+                else if(strcmp(strs[0], "write") == 0)
+                {
+                        if (argc == 3)
+                        {
+                          char buffer[BLOCK_SIZE];
+
+                          strcpy(buffer, strs[2]);
+
+                          my_write(atoi(strs[1]), &buffer, strlen(strs[2]));
+                          printf("Buffer contains: %s\0", buffer);
+                        }
+                        else
+                        {
+                                printf("getCommands() -- Not enough arugments");
+
+                        }
+                }
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)
                         break;
