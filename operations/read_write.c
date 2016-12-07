@@ -25,10 +25,6 @@ int my_read(int fd, char buffer[], int count)
 
         int avail = mip->INODE.i_size - oftEntry->offset;
 
-        if (avail > count)
-        {
-          avail = count;
-        }
         char *cp = buffer;
         char *cr;
 
