@@ -112,6 +112,7 @@ void print_dir_entry(int dev, MINODE *mip, char *entry_name)
 {
   time_t t;
   int i = 0;
+  char mybuf[BLKSIZE];
 
   char *t1 = "xwrxwrxwr-------";
   char *t2 = "----------------";
@@ -149,7 +150,15 @@ void print_dir_entry(int dev, MINODE *mip, char *entry_name)
 
   t = mip->INODE.i_mtime;
 
-  printf("%10s\t ", entry_name);
+  printf("%10s", entry_name);
+  if(S_ISLNK(mip->INODE.i_mode))
+  {
+    printf("-->");
+    get_block(mip->dev, mip->INODE.i_block[0], mybuf);
+    printf("%s",mybuf);
+    put_block(mip->dev, mip->INODE.i_block[0], mybuf);
+  }
+  printf("\t ");
   printf("%s", ctime(&t));
 
 
