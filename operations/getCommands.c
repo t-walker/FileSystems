@@ -81,6 +81,10 @@ void getCommands(char* currentPath)
                 {
                   my_rm(strs[1]);
                 }
+                else if(strcmp(strs[0], "stat") == 0)
+                {
+                  my_stat(strs[1]);
+                }
                 else if(strcmp(strs[0], "link") == 0)
                 {
                   if (argc >= 3)
@@ -91,6 +95,18 @@ void getCommands(char* currentPath)
                 else if(strcmp(strs[0], "unlink") == 0)
                 {
                   my_unlink(strs[1]);
+                }
+                else if(strcmp(strs[0], "cat") == 0)
+                {
+                  if (argc == 2)
+                  {
+                          cat(strs[1]);
+                  }
+                  else
+                  {
+                    printf("getCommands() -- Not enough arugments");
+
+                  }
                 }
 
                 printf("\n");

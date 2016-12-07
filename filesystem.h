@@ -52,7 +52,7 @@ void my_creat(char *pathname);
 void my_link(char *old_file, char *new_file);
 void my_unlink(char *filename);
 // void symlink();
-// void stat();
+void my_stat(char *pathname);
 void ch_mod(char *args[], int argv);
 void touch(char *argv[], int argc);
 void quit();
@@ -63,7 +63,7 @@ void quit();
 // void read();
 // void write();
 // void lseek();
-// void cat();
+void cat(char *pathname);
 // void cp();
 // void mv();
 
