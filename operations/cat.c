@@ -38,14 +38,12 @@ void cat(char *pathname)
         int fd = my_open(pathname, O_RDONLY);
 
         char buffer[50];
-        int count = my_read(fd, buffer, BLOCK_SIZE);
-        int total_bytes = count;
+        int count = 1;
 
         while(count)
         {
-          printf("%s", buffer);
           count = my_read(fd, buffer, BLOCK_SIZE);
-          getchar();
+          printf("%s", buffer);
         }
 
         my_close(fd);

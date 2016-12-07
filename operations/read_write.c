@@ -15,8 +15,8 @@ int my_read(int fd, char buffer[], int count)
 
         if (oftEntry->mode != O_RDONLY && oftEntry->mode != O_RDWR)
         {
-          printf("Cannot read this file.\n");
-          return;
+                printf("Cannot read this file.\n");
+                return;
         }
 
         int r_count = 0;
@@ -95,8 +95,6 @@ int my_read(int fd, char buffer[], int count)
 
                         memcpy(cp, cr, read_in);
 
-                        oftEntry->offset += read_in;
-                        printf("read() -- oftEntry->offset = %d\n", oftEntry->offset);
 
                         r_count += read_in;
                         printf("read() -- r_count = %d\n", r_count);
@@ -109,6 +107,9 @@ int my_read(int fd, char buffer[], int count)
 
                         remain -= read_in;
                         printf("read() -- remain = %d\n", remain);
+
+                        oftEntry->offset += read_in;
+                        printf("read() -- oftEntry->offset = %d\n", oftEntry->offset);
 
                         if (count <= 0 || avail <= 0)
                         {
@@ -151,8 +152,8 @@ int my_write(int fd, char buf[], int count)
 
         if (oftEntry->mode == O_RDONLY)
         {
-          printf("Cannot write to this file.\n");
-          return;
+                printf("Cannot write to this file.\n");
+                return;
         }
 
         char *cq;
@@ -225,11 +226,11 @@ int my_write(int fd, char buf[], int count)
 
                         if (i_buf[i_blk] == 0)
                         {
-                          i_buf[i_blk] = balloc(mip->dev);
+                                i_buf[i_blk] = balloc(mip->dev);
 
-                          get_block(mip->dev, i_buf[i_blk], tmpBuf);
-                          memset(tmpBuf, '\0', BLOCK_SIZE);
-                          put_block(mip->dev, i_buf[i_blk], tmpBuf);
+                                get_block(mip->dev, i_buf[i_blk], tmpBuf);
+                                memset(tmpBuf, '\0', BLOCK_SIZE);
+                                put_block(mip->dev, i_buf[i_blk], tmpBuf);
                         }
                         put_block(mip->dev, tmpBlk, i_buf);
 
@@ -237,11 +238,11 @@ int my_write(int fd, char buf[], int count)
                         di_blk = (lbk - (256 + 12) % 256);
                         if(di_buf[di_blk] == 0)
                         {
-                          di_buf[di_blk] = balloc(mip->dev);
+                                di_buf[di_blk] = balloc(mip->dev);
 
-                          get_block(mip->dev, di_buf[di_blk], tmpBuf);
-                          memset(tmpBuf, '\0', BLOCK_SIZE);
-                          put_block(mip->dev, di_buf[di_blk], tmpBuf);
+                                get_block(mip->dev, di_buf[di_blk], tmpBuf);
+                                memset(tmpBuf, '\0', BLOCK_SIZE);
+                                put_block(mip->dev, di_buf[di_blk], tmpBuf);
                         }
 
                         blk = di_buf[di_blk];
