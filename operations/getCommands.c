@@ -88,6 +88,18 @@ void getCommands(char* currentPath)
                           my_link(strs[1], strs[2]);
                   }
                 }
+                else if(strcmp(strs[0], "cat") == 0)
+                {
+                  if (argc == 2)
+                  {
+                          cat(strs[1]);
+                  }
+                  else
+                  {
+                    printf("getCommands() -- Not enough arugments");
+
+                  }
+                }
 
                 printf("\n");
                 if(strcmp(strs[0], "quit") == 0)

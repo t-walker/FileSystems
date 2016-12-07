@@ -63,7 +63,7 @@ void quit();
 // void read();
 // void write();
 // void lseek();
-// void cat();
+void cat(char *pathname);
 // void cp();
 // void mv();
 
