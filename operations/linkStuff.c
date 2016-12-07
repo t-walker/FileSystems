@@ -25,6 +25,7 @@
     MINODE *omip, *pmip;
     char dirname[256], basename[100];
 
+//1. // verify old_file exists and is not DIR;
     //validate old file path
     if(old_file[0] == '\0')
     {
@@ -116,6 +117,13 @@
       return;
     }
 
+  //2. // new_file must not exist yet:
+    if(search(pmip, basename) != 0)
+    {
+            printf("%s already exists in %s\n", basename, dirname);
+            iput(pmip);
+            return;
+    }
     //mk sure they are the same device
     if(odev != ndev)
     {
@@ -125,8 +133,11 @@
       return;
     }
 
+//3.// creat entry in new_parent DIR with same ino
     //add the new link
-    insert_dir_entry(pmip, omip->ino, basename);
+    insert_dir_entry(pmip, omip->ino, basename); //omip->ino is old ino
+
+    /*4. incrament linkscount, update time, mark as dirty, iput*/
     omip->INODE.i_links_count++;
     omip->INODE.i_atime = pmip->INODE.i_atime = time(0L);
     pmip->dirty = 1;
@@ -158,6 +169,7 @@
       deallocate INODE;
       iput(mip);
   }*/
+
 void my_unlink(char *filename)
 {
   int i, inum, pinum, dev;
@@ -169,7 +181,7 @@ void my_unlink(char *filename)
     printf("Filename does not exist\n");
     return;
   }
-
+//1. get filenmae's minode:
 //get dev
   if(filename[0] == '/')
   {
@@ -199,7 +211,7 @@ void my_unlink(char *filename)
     return;
   }
 
-/////remove base name from parent dir ///
+//2. // remove basename from parent DIR
 //split into parent and base
   strcpy(dirname, dname(filename));
   strcpy(basename, bname(filename));
@@ -239,7 +251,7 @@ void my_unlink(char *filename)
 
   iput(pmip);
 
-  //decrement link count
+  //3. // decrement INODE's link_count
     mip->INODE.i_links_count--;
   //remove the child's data by deallocating
   if(mip->INODE.i_links_count > 0)
@@ -248,8 +260,7 @@ void my_unlink(char *filename)
     iput(mip);
     return;
   }
-  /*if (!SLINK file) // assume:SLINK file has no data block
-    truncate(mip);*/
+  //4. // deallocate all data blocks
   idealloc(mip->dev, mip->ino);
   mip->dirty = 1;
   iput(mip);
@@ -275,6 +286,7 @@ void my_symlink(char *old_file, char *new_file)
   MINODE *omip, *pmip;
   char dirname[256], basename[100];
 
+//1. check: old_file must exist and new_file not yet exist;
   //validate old file path
   if(old_file[0] == '\0')
   {
@@ -373,7 +385,9 @@ void my_symlink(char *old_file, char *new_file)
           return;
   }
 
-  symlinkimpl(pmip, basename, old_file);
+//2. create new_file;
+  symlinkimpl(pmip, basename, old_file); //3 is in here
+//4. mark new_file parent minode dirty;
   pmip->INODE.i_atime = time(0L);
   pmip->dirty = 1;
   iput(pmip);
@@ -387,7 +401,7 @@ void symlinkimpl(MINODE *pmip,const char *basename, const char *path)
         MINODE *mip = iget(pmip->dev, inum); //load INODE into and minode
         char mybuf[BLKSIZE], *temp = mybuf;
         //initialize mip->INODE as a DIR INODE
-        mip->INODE.i_mode = 0xA000; //mode is REG with permissions
+        mip->INODE.i_mode = 0xA000;
         mip->INODE.i_uid = running->uid;
         mip->INODE.i_gid = running->gid;
         mip->INODE.i_size = 0; //no allocation needed
@@ -395,6 +409,7 @@ void symlinkimpl(MINODE *pmip,const char *basename, const char *path)
         //should set up time
         mip->INODE.i_atime = mip->INODE.i_ctime = mip->INODE.i_mtime = time(0L);
 
+  // 3. // assume length of old_file name <= 60 chars
         //copy the path name into the block
         get_block(mip->dev, mip->INODE.i_block[0], mybuf);
         i=0;
