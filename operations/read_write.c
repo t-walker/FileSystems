@@ -13,9 +13,9 @@ int my_read(int fd, char buffer[], int count)
         OFT *oftEntry = running->fd[fd];
         MINODE *mip = oftEntry->mptr;
 
-        if (oftEntry->mode != O_RDONLY || oftEntry->mode != O_RDWR)
+        if (oftEntry->mode != O_RDONLY && oftEntry->mode != O_RDWR)
         {
-          printf("Cannot write to this file.\n");
+          printf("Cannot read this file.\n");
           return;
         }
 
@@ -24,6 +24,11 @@ int my_read(int fd, char buffer[], int count)
         int remain;
 
         int avail = mip->INODE.i_size - oftEntry->offset;
+
+        if (avail > count)
+        {
+          avail = count;
+        }
         char *cp = buffer;
         char *cr;
 
@@ -69,9 +74,10 @@ int my_read(int fd, char buffer[], int count)
                         blk = di_buf[(lbk - (256 + 12)) % 256];
                 }
 
-                get_block(mip->dev, blk, buffer);
+                get_block(mip->dev, blk, read_buffer);
+                printf("read() -- buffer contains: %s", buffer);
 
-                cr = buf + start_byte;
+                cr = read_buffer + start_byte;
 
                 remain = BLOCK_SIZE - start_byte;
 
@@ -89,10 +95,9 @@ int my_read(int fd, char buffer[], int count)
                         {
                                 read_in = remain;
                                 printf("read() -- read_in = remain = %d\n", remain);
-
                         }
 
-                        memcpy(cr, cp, read_in);
+                        memcpy(cp, cr, read_in);
 
                         oftEntry->offset += read_in;
                         printf("read() -- oftEntry->offset = %d\n", oftEntry->offset);
