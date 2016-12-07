@@ -14,8 +14,10 @@ void getCommands(char* currentPath)
         {
                 i=0;
                 printf("TMFilesystem:");
-                //pwd();
-                printf("$ ");
+                pwd();
+                printf("[mkdir, rmdir, ls, cd, pwd, creat, link, unlink, ");
+                printf("symlink, stat, chmod, touch, open, close, read, write, ");
+                printf("lseek,cat, cp, mv]$ ");
                 fgets(command, 250, stdin);
                 argc = parse(strip(command), " ", strs);
 
