@@ -142,6 +142,12 @@ int my_write(int fd, char buf[], int count)
         OFT *oftEntry = running->fd[fd];
         MINODE *mip = oftEntry->mptr;
 
+        if (oftEntry->mode == O_RDONLY)
+        {
+          printf("Cannot write to this file.\n");
+          return;
+        }
+
         char *cq;
         char *cp;
 
