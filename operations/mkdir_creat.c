@@ -12,47 +12,44 @@ kmkdir(MINODE *pmip,const char *basename, int pinum)
         char mybuf[BLKSIZE];
         DIR* dp;
         char* cp;
-        printf("kmkdir() --- basename1 = %s\n", basename);
 
         //initialize mip->INODE as a DIR INODE
         mip->INODE.i_mode = 0x41ED; //mode is dir with permissions
         mip->INODE.i_uid = running->uid;
         mip->INODE.i_gid = running->gid;
         mip->INODE.i_size = BLKSIZE;
-        printf("kmkdir() --- basename2 = %s\n", basename);
         mip->INODE.i_links_count = 2;
         //should set up time
         mip->INODE.i_atime = mip->INODE.i_ctime = mip->INODE.i_mtime = time(0L);
-        printf("kmkdir() --- basename3 = %s\n", basename);
         mip->INODE.i_blocks = 2;
         mip->INODE.i_block[0] = blk;
 
         for (i=1; i < 15; i++) {
                 mip->INODE.i_block[i] = 0;
         }
-        printf("kmkdir() --- basename4 = %s\n", basename);
+
         mip->dirty = 1;
         iput(mip); //write INODE back to disk
-        printf("kmkdir() --- basename5 = %s\n", basename);
 
         //make data block
         get_block(pmip->dev, blk, mybuf);
         dp = (DIR*)mybuf;
-        printf("kmkdir() --- basename6 = %s\n", basename);
+
         printf("kmkdir--- inum: %d\n",inum);
         dp->inode = inum;
-        strcpy(dp->name, ".");
+        dp->name[0] = '.';
         dp->name_len = 1;
         dp->rec_len = 12;
-        printf("kmkdir() --- basename7 = %s\n", basename);
+
         cp = mybuf;
         cp += dp->rec_len;
         dp = (DIR*)cp;
-        printf("kmkdir() --- basename8 = %s\n", basename);
-        printf("kmkdir--- pmip->in0: %d\n",pmip->ino);
+
+        printf("kmkdir--- pmip->ino: %d\n",pmip->ino);
         dp->inode = pmip->ino;
         dp->name_len = 2;
-        strcpy(dp->name, "..");
+        dp->name[0] = '.';
+        dp->name[1] = '.';
         dp->rec_len= BLKSIZE - 12;
 
         put_block(dev, blk, mybuf);
@@ -99,9 +96,10 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
         printf("insert_dir_entry() ---\n");
 
         printf("insert_dir_entry() --- basename = %s\n", basename);
-        int need_len = 4*((8 + strlen(basename) + 4)/4);
+        int baslen = strlen(basename);
+        int need_len = 4*((8 + baslen + 3)/4);
         int ideal_len = 0, remain=0;
-        int i = 0, blk = 0;
+        int i = 0, j = 0, blk = 0;
         char mybuf[1024], *cp;
         DIR *dp;
         //slightly different than psudo code
@@ -121,18 +119,22 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
                         dp = (DIR*) cp;
                 }
                 //now dp is at the end;
-                ideal_len = 4*((8 + dp->name_len + 4)/4);
+                ideal_len = 4*((8 + dp->name_len + 3)/4);
                 remain = dp->rec_len - ideal_len;
                 if(remain >= need_len) {
                         dp->rec_len = ideal_len;
                         cp += dp->rec_len;
                         dp = (DIR*)cp;
+
                         dp->inode = inum;
                         dp->rec_len = remain;
-                        dp->name_len = strlen(basename);
+                        dp->name_len = baslen;
                         //dp->file_type?
-                        strcpy(dp->name, basename);
-                        printf("insert_dir_entry() --- dp->name = %s\n", dp->name);
+                        for(j = 0; j<baslen; j++)
+                        {
+                          dp->name[j] = basename[j];
+                        }
+                        //printf("insert_dir_entry() --- dp->name = %s\n", dp->name);
                         put_block(pmip->dev, blk, mybuf);
                         printf("insert_dir_entry() --- inside if(remain >= need_len)\n");
                         return;
@@ -151,9 +153,12 @@ void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
 
         dp->inode = inum;
         dp->rec_len = BLKSIZE;
-        dp->name_len = strlen(basename);
+        dp->name_len = baslen;
         //dp->file_type?
-        strcpy(dp->name, basename);
+        for(j = 0; j<baslen; j++)
+        {
+          dp->name[j] = basename[j];
+        }
 
         put_block(pmip->dev, blk, mybuf);
         printf("insert_dir_entry() --- END\n");
@@ -351,7 +356,7 @@ void my_creat (char *pathname)
                 return;
         }
         pmip = iget(dev, pinum);
-        //is it a dir?
+        //is parent a dir?
         if(!(S_ISDIR(pmip->INODE.i_mode))) {
                 printf("&s is not a directory\n", dirname);
                 iput(pmip);

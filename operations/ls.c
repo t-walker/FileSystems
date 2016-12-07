@@ -131,7 +131,7 @@ void print_dir_entry(int dev, MINODE *mip, char *entry_name)
     printf("l");
   }
 
-  for(i = 0; i < 8; i++)
+  for(i = 0; i <= 8; i++)
   {
     if(mip->INODE.i_mode & (1 << i))
     {
