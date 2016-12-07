@@ -373,7 +373,7 @@ void my_symlink(char *old_file, char *new_file)
           return;
   }
 
-  symlinkimpl(pmip, basename, new_file);
+  symlinkimpl(pmip, basename, old_file);
   pmip->INODE.i_atime = time(0L);
   pmip->dirty = 1;
   iput(pmip);
