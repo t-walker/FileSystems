@@ -17,10 +17,10 @@ void pwd()
 int searchDirectories(int ino, int dev)
 {
         int local_ino, pointer_ino;
-        char buf[BLOCK_SIZE];
+        char mybuf[BLOCK_SIZE];
 
-        DIR *dp = (DIR *) buf;
-        char *cp = buf;
+        DIR *dp = (DIR *) mybuf;
+        char *cp = mybuf;
         MINODE *mip;
 
         if(ino == 2)
@@ -29,7 +29,7 @@ int searchDirectories(int ino, int dev)
         }
 
         mip = iget(dev, ino);
-        get_block(dev, mip->INODE.i_block[0], buf);
+        get_block(dev, mip->INODE.i_block[0], mybuf);
 
         local_ino = dp->inode;
 
@@ -37,7 +37,6 @@ int searchDirectories(int ino, int dev)
         dp = (DIR *) cp;
 
         pointer_ino = dp->inode;
-
         searchDirectories(pointer_ino, dev);
 
         getName(local_ino, dev, pointer_ino);
@@ -49,16 +48,16 @@ int getName(int local_ino, int local_dev, int pointer_ino)
 {
         MINODE *mip = iget(local_dev, pointer_ino);
 
-        char buf[BLOCK_SIZE];
+        char mybuf[BLOCK_SIZE];
         int i;
-        DIR *dp = (DIR *) buf;
-        char *cp = buf, c;
+        DIR *dp = (DIR *) mybuf;
+        char *cp = mybuf, c;
 
 
         for(i = 0; i < 12; i++)
         {
-                get_block(dev, mip->INODE.i_block[i], buf);
-                while(cp < buf + BLOCK_SIZE)
+                get_block(dev, mip->INODE.i_block[i], mybuf);
+                while(cp < mybuf + BLOCK_SIZE)
                 {
                         if(dp->inode == local_ino)
                         {
