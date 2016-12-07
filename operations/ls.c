@@ -4,30 +4,32 @@
 void ls (char *pathname)
 {
         //printf("ls() -----\n");
-        int i;
-        int ino = running->cwd->ino;
-        int dev = running->cwd->dev;
+        int i;                         // initalize the empty int
+        int ino = running->cwd->ino;   // get the current ino
+        int dev = running->cwd->dev;   // get the current dev
 
-        MINODE *mip;
+        MINODE *mip; // initalize a *mip
+
         //printf("ls() -- running->cwd->ino: %d\n", running->cwd->ino);
         //printf("ls() -- mip = running->cwd\n");
 
-        if (pathname)
+        if (pathname) // check to see if we need to change directories at all
         {
                 //printf("ls() -- pathname isn't null\n");
                 //printf("ls() -- pathname is: %s\n", pathname);
 
-                if (pathname[0] == '/')
+                if (pathname[0] == '/') // the path isn't relative
                 {
-                        dev = root->dev;
+                        dev = root->dev; // assign back to the root
                         //printf("ls() -- pathname starts with '/', root->dev\n");
                 }
 
                 //printf("ls() -- calling getino\n");
-                ino = getino(pathname, dev);
+                ino = getino(pathname, dev); // get the ino given the pathname and dev
                 //printf("ls() -- finished getino()\n");
 
-                mip = iget(dev, ino);
+                mip = iget(dev, ino); // get the mip given the dev and ino
+
                 //printf("ls() -- finished iget()\n");
                 // mip points at the minode;
                 // Each datablock of mip->INODE contains DIR entries
@@ -35,24 +37,24 @@ void ls (char *pathname)
 
                 //printf("ls() -- calling printDir()\n");
 
-                if (S_ISDIR(mip->INODE.i_mode))
+                if (S_ISDIR(mip->INODE.i_mode)) // Check to make sure it's a directory and not a file
                 {
                         //printf("IS directory\n");
-                        print_child_inodes(mip, dev);
+                        print_child_inodes(mip, dev); // print the child's information
                 }
                 else
                 {
-                        printf("IS NOT A DIRECTORY");
+                        printf("IS NOT A DIRECTORY"); // it's not a directory
                 }
 
-                iput(mip);
+                iput(mip); // put the mip back
 
         }
         else
         {
-                mip = iget(dev, running->cwd->ino);
-                print_child_inodes(mip, dev);
-                iput(mip);
+                mip = iget(dev, running->cwd->ino); // the mip is the just the current ino
+                print_child_inodes(mip, dev);       // print out the child inos
+                iput(mip);                          // put the ino back
         }
 
 }
