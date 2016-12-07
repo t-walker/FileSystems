@@ -52,7 +52,7 @@ void my_creat(char *pathname);
 // void link();
 // void unlink();
 // void symlink();
-// void stat();
+void my_stat(char *pathname);
 void ch_mod(char *args[], int argv);
 void touch(char *argv[], int argc);
 void quit();
