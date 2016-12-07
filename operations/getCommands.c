@@ -99,6 +99,20 @@ void getCommands(char* currentPath)
                                 my_symlink(strs[1], strs[2]);
                         }
                 }
+                else if(strcmp(strs[0], "cp") == 0)
+                {
+                  if (argc >= 3)
+                  {
+                          my_cp(strs[1], strs[2]);
+                  }
+                }
+                else if(strcmp(strs[0], "mv") == 0)
+                {
+                  if (argc >= 3)
+                  {
+                          my_mv(strs[1], strs[2]);
+                  }
+                }
                 else if(strcmp(strs[0], "unlink") == 0)
                 {
                         my_unlink(strs[1]);

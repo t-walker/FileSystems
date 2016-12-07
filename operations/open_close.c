@@ -45,6 +45,8 @@ int my_open(char *pathname, int flag)
   if(!ino && flag == O_CREAT)
   {
     my_creat(pathname);
+    ino = getino(pathname, dev);
+
   }
 
   mip = iget(dev, ino);
