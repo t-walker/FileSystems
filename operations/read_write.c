@@ -13,6 +13,12 @@ int my_read(int fd, char buffer[], int count)
         OFT *oftEntry = running->fd[fd];
         MINODE *mip = oftEntry->mptr;
 
+        if (oftEntry->mode != O_RDONLY || oftEntry->mode != O_RDWR)
+        {
+          printf("Cannot write to this file.\n");
+          return;
+        }
+
         int r_count = 0;
         int read_in = 0;
         int remain;
