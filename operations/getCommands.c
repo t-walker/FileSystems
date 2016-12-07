@@ -155,6 +155,18 @@ void getCommands(char* currentPath)
 
                         }
                 }
+                else if(strcmp(strs[0], "lseek") == 0)
+                {
+                        if (argc == 3)
+                        {
+                                l_seek(atoi(strs[1]), atoi(strs[2]));
+                        }
+                        else
+                        {
+                                printf("getCommands() -- Not enough arugments");
+
+                        }
+                }
                 else if(strcmp(strs[0], "read") == 0)
                 {
                         if (argc == 3)
@@ -165,23 +177,6 @@ void getCommands(char* currentPath)
 
                           char buffer[BLOCK_SIZE];
                           my_read(atoi(strs[1]), &buffer, length);
-                          printf("Buffer contains: %s\0", buffer);
-                        }
-                        else
-                        {
-                                printf("getCommands() -- Not enough arugments");
-
-                        }
-                }
-                else if(strcmp(strs[0], "write") == 0)
-                {
-                        if (argc == 3)
-                        {
-                          char buffer[BLOCK_SIZE];
-
-                          strcpy(buffer, strs[2]);
-
-                          my_write(atoi(strs[1]), &buffer, strlen(strs[2]));
                           printf("Buffer contains: %s\0", buffer);
                         }
                         else
