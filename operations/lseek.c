@@ -7,19 +7,19 @@ void l_seek(int fd, int offset)
 
   if(fd >= 0 && fd < 10)
   {
-    OFT *oftEntry = running->fd[fd];
-    currentOffset = oftEntry->offset;
-    size = oftEntry->mptr->INODE.i_size;
+    OFT *oftEntry = running->fd[fd];      // get the fd from the running process
+    currentOffset = oftEntry->offset;     // get the current offset
+    size = oftEntry->mptr->INODE.i_size;  // get the size of the fd's mip
 
-    if (offset < 0)
+    if (offset < 0) // if the offset is less than zero
     {
-      offset = 0;
+      offset = 0;   // set it to zer0
     }
-    else if(size < offset)
+    else if(size < offset) // if the offset is greater than the side
     {
-      offset = size;
+      offset = size;       // set the offset to the size / end of file
     }
 
-    running->fd[fd]->offset = offset;
+    running->fd[fd]->offset = offset; // set the actual file size
   }
 }
