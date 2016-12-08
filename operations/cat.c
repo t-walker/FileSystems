@@ -6,6 +6,11 @@ void cat(char *pathname)
 
         int fd = my_open(pathname, O_RDONLY);
 
+        if (fd == 0)
+        {
+          return;
+        }
+
         char buffer[BLOCK_SIZE]; // create a buffer to store data in
         int count = 1;           // set a non-zero count
 
