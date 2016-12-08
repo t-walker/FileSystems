@@ -28,6 +28,7 @@ void rm_dir(char *pathname)
     MINODE *pmip = (MINODE*) malloc(sizeof(MINODE));
     MINODE *mip;
 
+  //1. get in-memory INODE of pathname:
     //trying to remove the root
     if(pathname[0] == '/'&& strlen(pathname) == 1){
       printf("cannot remove root\n");
@@ -61,7 +62,8 @@ void rm_dir(char *pathname)
                 return;
         }
 
-        //is it a r?
+ //2. verify INODE is a DIR (by INODE.i_mode field);
+        //is it a dirr?
         if(!(S_ISDIR(mip->INODE.i_mode)))
         {
                 printf("%s is not a directory\n", pathname);
@@ -106,7 +108,7 @@ void rm_dir(char *pathname)
         }
         idealloc(mip->dev, mip->ino);
         iput(mip);
-        
+
     //is it empty?
     if(mip->INODE.i_links_count == 2)
     {
@@ -130,6 +132,7 @@ void rm_dir(char *pathname)
     idealloc(mip->dev, mip->ino);
     iput(mip);
 
+    //3. /* get parent's ino and inode */
     //fix the parent inode in memory
     strcpy(dirname, dname(pathname));
   	strcpy(basename, bname(pathname));
@@ -153,9 +156,12 @@ void rm_dir(char *pathname)
   	}
   	pmip = iget(dev, pinum);
 
-    delete_dir_entry(pmip, basename);
 
-    //pmip->refCount --; //tenative
+    /*4. /* remove name from parent directory */
+    delete_dir_entry(pmip, basename); //5 and 6 in here
+
+
+  //  7. dec parent links_count by 1;*/
     pmip->INODE.i_links_count--;
     pmip->INODE.i_atime = pmip->INODE.i_mtime = time(0L);
     pmip->dirty = 1;
@@ -219,8 +225,9 @@ void delete_dir_entry(MINODE *pmip, char *basename)
         char mybuf[BLKSIZE], *cp, temp, *tp, *t2p;
         DIR *dp;
 
-        for(i = 0; i < 12; i++)
+        for(i = 0; i < 12; i++) //go through blocks
         {
+
                 if( pmip->INODE.i_block[i] == 0)
                 {
                         return;
@@ -230,10 +237,10 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                 dp = (DIR*) mybuf;
                 cp = mybuf;
 
-                while(cp < mybuf + BLKSIZE)
+                while(cp < mybuf + BLKSIZE) //go through the block
                 {
                         j = i;
-                        ideal_len = 4 * ((8 + dp->name_len + 3) / 4);
+                        ideal_len = 4 * ((8 + dp->name_len + 3) / 4); //multiple of 4
 
                         temp = dp->name[dp->name_len];
                         dp->name[dp->name_len] = 0;
@@ -241,7 +248,7 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                         //have we found the name?
                         if(strcmp(basename, dp->name) == 0) // dp name might need a null char appended
                         {
-                                //only entry
+                                //(2). if (entry is the only entry in block)
                                 if(dp->rec_len == BLKSIZE)
                                 {
                                         //deallocate it so that we can remove
@@ -257,6 +264,7 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                                         }
                                         return;
                                 }
+                                //(3). if (entry is last entry in block)
                                 else if(dp->rec_len != ideal_len) //last item
                                 {
                                         lastLen = dp->rec_len;
@@ -267,7 +275,8 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                                         put_block(pmip->dev, pmip->INODE.i_block[i], mybuf); //Write bac
                                         return;
                                 }
-                                else{ //dp->rec_len == ideal_length
+                                //(4).  else{ // entry in middle of block
+                                else{
                                         add_len = dp->rec_len;
                                         tp = cp + dp->rec_len;
                                         length = mybuf + BLOCK_SIZE - tp;
@@ -290,6 +299,7 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                                         return;
                                 }
                         }
+
                         //reset final dp position
                         dp->name[dp->name_len] = temp;
 
@@ -298,6 +308,8 @@ void delete_dir_entry(MINODE *pmip, char *basename)
                         dp = (DIR *) cp;
                 }
         }
+        //(5). write block back to disk;
+        //done in each case
 }
 
 void my_rm(char *pathname)
@@ -357,8 +369,6 @@ void my_rm(char *pathname)
     iput(mip);
     return;
   }
-
-////////////////////////////may need to check links count when we imple link/unlink
 
   //deallocate the inode
   idealloc(mip->dev, mip->ino);
