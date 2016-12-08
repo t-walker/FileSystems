@@ -91,7 +91,7 @@ kmkdir(MINODE *pmip,const char *basename, int pinum)
      6. increment parent INODE's links_count by 1 and make pmip dirty; iput(pmip);
      }*/
 
-void insert_dir_entry(MINODE *pmip,int inum, const char *basename)
+void insert_dir_entry(MINODE *pmip,int inum, const char *basename) //same thins as enter_child
 {
         printf("insert_dir_entry() ---\n");
 
@@ -372,7 +372,7 @@ void my_creat (char *pathname)
         }
 
         printf("creat() --- basename = %s\n", basename);
-        //call kmkdir()
+        //call kcreat()
         kcreat(pmip, basename); //may eventually pass atype?
 
         pmip->INODE.i_atime = time(0L);
